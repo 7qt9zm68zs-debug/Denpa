@@ -1,0 +1,12 @@
+---
+import MediaPlaceholder from "./MediaPlaceholder.astro";
+interface Props {
+  variant: string;
+  title: string;
+  number: string;
+  ratio?: "wide" | "portrait" | "square" | "hero";
+}
+const { variant, title, number, ratio = "wide" } = Astro.props;
+---
+
+<MediaPlaceholder variant={variant} label={title} index={number} ratio={ratio} interactive />

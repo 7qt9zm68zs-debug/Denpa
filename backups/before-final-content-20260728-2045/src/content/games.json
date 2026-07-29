@@ -1,0 +1,62 @@
+[
+  {
+    "slug": "void",
+    "number": "G-01",
+    "title": "虚无",
+    "englishTitle": "VOID",
+    "year": "2026",
+    "category": "3D 叙事解谜",
+    "status": "开发中",
+    "variant": "void",
+    "summary": "一款从虚无主义走向主动赋予生活意义的短篇第一人称游戏。",
+    "role": ["概念", "剧本", "程序", "场景", "声音选择"],
+    "highlights": ["第一人称探索", "环境叙事", "短篇体验"],
+    "description": "玩家从重复劳动与梦境碎片中醒来，在一组逐渐失去意义的空间里寻找能够亲自作出的选择。",
+    "next": "继续完善场景节奏、交互反馈与最终章节。"
+  },
+  {
+    "slug": "neon-cut",
+    "number": "G-02",
+    "title": "霓虹切线",
+    "englishTitle": "NEON CUT",
+    "year": "2026",
+    "category": "俯视角动作",
+    "status": "玩法原型",
+    "variant": "cut",
+    "summary": "强调快速接近、一击斩杀与连续战斗节奏的动作实验。",
+    "role": ["玩法", "程序", "关卡", "反馈"],
+    "highlights": ["高速移动", "一击斩杀", "节奏反馈"],
+    "description": "以短距离冲刺和方向选择构成战斗核心，目标是在极短时间内完成判断、接近与击杀。",
+    "next": "增加敌人类型，并补充更完整的声音与镜头反馈。"
+  },
+  {
+    "slug": "paper-constellation",
+    "number": "G-03",
+    "title": "纸上星座",
+    "englishTitle": "PAPER CONSTELLATION",
+    "year": "2025",
+    "category": "卡牌原型",
+    "status": "可运行原型",
+    "variant": "cards",
+    "summary": "把人物关系与记忆片段组织成一场可被重新排列的卡牌叙事。",
+    "role": ["设计", "程序", "UI", "叙事"],
+    "highlights": ["卡牌组合", "关系叙事", "轻策略"],
+    "description": "每张卡都代表一段记忆或人物关系，玩家通过组合让故事显现出不同的解释。",
+    "next": "整理卡牌文本，并完成第一组完整叙事局。"
+  },
+  {
+    "slug": "sideways-dream",
+    "number": "G-04",
+    "title": "侧面的梦",
+    "englishTitle": "SIDEWAYS DREAM",
+    "year": "2025",
+    "category": "2D 横版解谜",
+    "status": "Demo",
+    "variant": "dream",
+    "summary": "在二维空间里翻转前景与记忆，让不可抵达的房间重新连接。",
+    "role": ["概念", "关卡", "程序"],
+    "highlights": ["空间翻转", "横版探索", "梦境氛围"],
+    "description": "以场景层级切换为核心机制，玩家在现实与记忆的两种平面之间寻找出口。",
+    "next": "增加一组完整谜题链与更明确的视觉引导。"
+  }
+]

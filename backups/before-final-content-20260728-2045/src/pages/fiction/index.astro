@@ -1,0 +1,55 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import MediaPlaceholder from "@/components/MediaPlaceholder.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import novels from "@/content/novels.json";
+---
+
+<BaseLayout
+  title="小说档案 — Denpa"
+  description="Denpa 的短篇小说、手稿与梦境档案。"
+  theme="paper"
+>
+  <section class="archive-hero archive-hero--paper shell">
+    <p class="eyebrow">01 / FICTION ARCHIVE</p>
+    <h1>小说<br />与迟到的回声</h1>
+    <p>这里收录完整短篇、章节试读和仍在生长的手稿。</p>
+  </section>
+
+  <section class="fiction-index shell section">
+    <SectionHeading
+      index="F"
+      eyebrow="MANUSCRIPTS"
+      title={`${novels.length} 份手稿`}
+      description="点击进入安静的阅读视图。默认纸张模式，也可以切换深色主题。"
+    />
+
+    <ol class="fiction-list">
+      {novels.map((novel, index) => (
+        <li data-reveal>
+          <a class="fiction-card" href={`/fiction/${novel.slug}/`}>
+            <div class="fiction-card__visual">
+              <MediaPlaceholder
+                variant={novel.cover}
+                label={novel.title}
+                index={novel.number}
+                ratio={index % 2 === 0 ? "portrait" : "square"}
+              />
+            </div>
+            <div class="fiction-card__body">
+              <div class="fiction-card__meta">
+                <span>{novel.number}</span>
+                <span>{novel.year}</span>
+                <span>{novel.status}</span>
+              </div>
+              <h2>{novel.title}</h2>
+              <p class="fiction-card__subtitle">{novel.subtitle}</p>
+              <blockquote>{novel.excerpt}</blockquote>
+              <span class="text-link">开始阅读 <span aria-hidden="true">↗</span></span>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </section>
+</BaseLayout>

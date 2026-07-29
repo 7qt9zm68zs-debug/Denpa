@@ -1,0 +1,101 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import MediaPlaceholder from "@/components/MediaPlaceholder.astro";
+import artworks from "@/content/artworks.json";
+---
+
+<BaseLayout title="画作档案 — Denpa" description="Denpa 的画作、漫画、分镜与视觉实验。">
+  <section class="archive-hero shell">
+    <p class="eyebrow">02 / VISUAL ARCHIVE</p>
+    <h1>画面不是说明，<br />是另一种入口。</h1>
+    <p>绘画、漫画、分镜、草图与仍未命名的视觉碎片。</p>
+  </section>
+
+  <section class="art-grid shell section" aria-label="画作列表">
+    {artworks.map((artwork, index) => (
+      <button
+        class:list={["art-card", `art-card--${artwork.orientation}`]}
+        type="button"
+        data-artwork
+        data-index={String(index)}
+        aria-label={`查看作品：${artwork.title}`}
+      >
+        <MediaPlaceholder
+          variant={artwork.variant}
+          label={artwork.title}
+          index={artwork.id}
+          ratio={artwork.orientation === "portrait" ? "portrait" : artwork.orientation === "square" ? "square" : "wide"}
+          interactive
+        />
+        <span class="art-card__caption">
+          <strong>{artwork.title}</strong>
+          <span>{artwork.medium} / {artwork.year}</span>
+        </span>
+      </button>
+    ))}
+  </section>
+
+  <dialog class="art-dialog" data-art-dialog>
+    <div class="art-dialog__bar">
+      <span data-dialog-index>01 / 06</span>
+      <button type="button" data-dialog-close aria-label="关闭大图">关闭 ×</button>
+    </div>
+    <div class="art-dialog__visual" data-dialog-visual></div>
+    <div class="art-dialog__caption">
+      <div>
+        <span data-dialog-id>A-01</span>
+        <h2 data-dialog-title>Signal Garden</h2>
+      </div>
+      <p data-dialog-description></p>
+      <div class="art-dialog__nav">
+        <button type="button" data-dialog-prev>← 上一件</button>
+        <button type="button" data-dialog-next>下一件 →</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script is:inline define:vars={{ artworks }}>
+    const dialog = document.querySelector("[data-art-dialog]");
+    const cards = Array.from(document.querySelectorAll("[data-artwork]"));
+    let current = 0;
+
+    const render = (index) => {
+      if (!(dialog instanceof HTMLDialogElement)) return;
+      current = (index + artworks.length) % artworks.length;
+      const item = artworks[current];
+      const visual = dialog.querySelector("[data-dialog-visual]");
+      if (visual) {
+        visual.innerHTML = `
+          <div class="media-placeholder is-${item.variant} ratio-wide">
+            <div class="placeholder-grid" aria-hidden="true"></div>
+            <span class="placeholder-index">${item.id}</span>
+            <span class="placeholder-label">${item.title}</span>
+            <span class="placeholder-cross" aria-hidden="true">+</span>
+          </div>`;
+      }
+      dialog.querySelector("[data-dialog-index]").textContent = `${String(current + 1).padStart(2, "0")} / ${String(artworks.length).padStart(2, "0")}`;
+      dialog.querySelector("[data-dialog-id]").textContent = item.id;
+      dialog.querySelector("[data-dialog-title]").textContent = item.title;
+      dialog.querySelector("[data-dialog-description]").textContent = item.description;
+    };
+
+    cards.forEach((card) => {
+      card.addEventListener("click", () => {
+        if (!(dialog instanceof HTMLDialogElement)) return;
+        render(Number(card.dataset.index ?? 0));
+        dialog.showModal();
+      });
+    });
+    dialog?.querySelector("[data-dialog-close]")?.addEventListener("click", () => dialog.close());
+    dialog?.querySelector("[data-dialog-prev]")?.addEventListener("click", () => render(current - 1));
+    dialog?.querySelector("[data-dialog-next]")?.addEventListener("click", () => render(current + 1));
+    dialog?.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+    window.addEventListener("keydown", (event) => {
+      if (!(dialog instanceof HTMLDialogElement) || !dialog.open) return;
+      if (event.key === "ArrowLeft") render(current - 1);
+      if (event.key === "ArrowRight") render(current + 1);
+    });
+  </script>
+</BaseLayout>

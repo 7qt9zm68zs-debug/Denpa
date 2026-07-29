@@ -1,0 +1,39 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import games from "@/content/games.json";
+
+export function getStaticPaths() {
+  return games.map((game) => ({
+    params: { slug: game.slug },
+    props: { game }
+  }));
+}
+
+const { game } = Astro.props;
+---
+
+<BaseLayout title={`${game.title} — DENPA`} description={`Denpa的游戏《${game.title}》。`}>
+  <article class="project-detail">
+    <header class="project-detail__hero shell">
+      <a class="text-link" href="/games/">← 返回游戏</a>
+      <div class="project-detail__heading">
+        <h1>{game.title}</h1>
+      </div>
+    </header>
+
+    <div class="project-gallery shell section" aria-label={`${game.title}图片`}>
+      {game.images.map((image, index) => (
+        <figure data-reveal>
+          <img
+            src={image.src}
+            alt={`${game.title}画面 ${String(index + 1).padStart(2, "0")}`}
+            width={image.width}
+            height={image.height}
+            loading={index === 0 ? "eager" : "lazy"}
+            decoding="async"
+          />
+        </figure>
+      ))}
+    </div>
+  </article>
+</BaseLayout>

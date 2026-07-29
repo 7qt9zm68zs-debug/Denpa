@@ -1,0 +1,260 @@
+---
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import "@/styles/global.scss";
+
+interface Props {
+  title?: string;
+  description?: string;
+  theme?: "dark" | "paper";
+  readerTheme?: boolean;
+}
+
+const {
+  title = "DENPA — 小说、绘画、影像、游戏与原型",
+  description = "我热爱创作，不管是小说、绘画、影像，以及游戏、工具和网站。这里收录着我的一些想法。",
+  theme = "dark",
+  readerTheme = false
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
+---
+
+<!doctype html>
+<html lang="zh-CN" data-theme={theme} data-reader-theme={readerTheme ? "true" : undefined}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content={theme === "paper" ? "#F0EDE5" : "#111111"} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Denpa" />
+    <meta property="og:image" content="/media/games/endless/cover.webp" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <title>{title}</title>
+    <script is:inline>
+      (() => {
+        if (document.documentElement.dataset.readerTheme === "true") {
+          const saved = localStorage.getItem("denpa-theme");
+          if (saved) document.documentElement.dataset.theme = saved;
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="entry-curtain" aria-hidden="true">
+      <span>DENPA / ARCHIVE</span>
+    </div>
+    <div class="chapter-flash" aria-hidden="true"></div>
+    <a class="skip-link" href="#main">跳到主要内容</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      import Lenis from "lenis";
+      import gsap from "gsap";
+      import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (reduceMotion) {
+        document.querySelectorAll<HTMLVideoElement>("video[autoplay]").forEach((video) => {
+          video.removeAttribute("autoplay");
+          video.pause();
+        });
+      }
+
+      if (!reduceMotion) {
+        gsap.registerPlugin(ScrollTrigger);
+        const lenis = new Lenis({
+          duration: 1.05,
+          smoothWheel: true,
+          wheelMultiplier: 0.9
+        });
+
+        lenis.on("scroll", ScrollTrigger.update);
+        gsap.ticker.add((time) => lenis.raf(time * 1000));
+        gsap.ticker.lagSmoothing(0);
+
+        gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((element) => {
+          gsap.fromTo(
+            element,
+            { y: 36, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.9,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: element,
+                start: "top 88%",
+                once: true
+              }
+            }
+          );
+        });
+
+        const intro = gsap.timeline({ defaults: { ease: "power3.inOut" } });
+        intro
+          .to(".entry-curtain span", { opacity: 1, duration: 0.18 })
+          .to(".entry-curtain", {
+            clipPath: "inset(0 0 100% 0)",
+            duration: 0.82,
+            delay: 0.08
+          });
+
+        if (document.querySelector(".hero__title")) {
+          intro
+            .from(
+              ".hero__title span",
+              {
+                yPercent: 110,
+                duration: 0.72,
+                stagger: 0.08
+              },
+              "-=0.62"
+            )
+            .from(
+              ".hero__meta, .hero__role",
+              { opacity: 0, y: 12, duration: 0.35, stagger: 0.05 },
+              "-=0.28"
+            );
+        }
+
+        const desktop = window.matchMedia("(min-width: 721px)").matches;
+
+        if (desktop && document.querySelector(".hero__sticky")) {
+          const heroTimeline = gsap.timeline();
+          heroTimeline
+            .to(".hero__title", { yPercent: -12, ease: "none" }, 0)
+            .to(".hero__video", { scale: 1.055, ease: "none" }, 0)
+            .to(".hero__statement", { y: -42, ease: "none" }, 0);
+
+          ScrollTrigger.create({
+            trigger: ".hero",
+            start: "top top",
+            end: "bottom bottom",
+            pin: ".hero__sticky",
+            pinSpacing: false,
+            scrub: 0.7,
+            animation: heroTimeline
+          });
+        }
+
+        const refreshLayout = () => ScrollTrigger.refresh();
+        document.querySelectorAll<HTMLImageElement>("img").forEach((image) => {
+          if (!image.complete) image.addEventListener("load", refreshLayout, { once: true });
+        });
+        document.querySelectorAll<HTMLVideoElement>("video").forEach((video) => {
+          if (video.readyState < 1) {
+            video.addEventListener("loadedmetadata", refreshLayout, { once: true });
+          }
+        });
+        window.addEventListener("load", refreshLayout, { once: true });
+
+        gsap.utils.toArray<HTMLElement>("[data-literary-line]").forEach((line, index) => {
+          gsap.fromTo(
+            line,
+            { clipPath: "inset(0 0 105% 0)", yPercent: 45 },
+            {
+              clipPath: "inset(0 0 0% 0)",
+              yPercent: 0,
+              duration: 1.05,
+              delay: index * 0.08,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: line,
+                start: "top 82%",
+                once: true
+              }
+            }
+          );
+        });
+
+        gsap.utils.toArray<HTMLElement>(".process__steps li").forEach((layer) => {
+          gsap.fromTo(
+            layer,
+            { clipPath: "inset(14% 0 0 0)", y: 80 },
+            {
+              clipPath: "inset(0% 0 0 0)",
+              y: 0,
+              ease: "none",
+              scrollTrigger: {
+                trigger: layer,
+                start: "top 88%",
+                end: "top 36%",
+                scrub: 0.6
+              }
+            }
+          );
+        });
+      }
+
+      document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]").forEach((button) => {
+        button.setAttribute(
+          "aria-pressed",
+          String((document.documentElement.dataset.theme ?? "paper") === "dark")
+        );
+        button.addEventListener("click", () => {
+          const current = document.documentElement.dataset.theme ?? "dark";
+          const next = current === "paper" ? "dark" : "paper";
+          document.documentElement.dataset.theme = next;
+          localStorage.setItem("denpa-theme", next);
+          button.setAttribute("aria-pressed", String(next === "dark"));
+        });
+      });
+
+      let activePreview: HTMLVideoElement | null = null;
+      const videoObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const video = entry.target as HTMLVideoElement;
+            if (entry.isIntersecting) {
+              video.querySelectorAll<HTMLSourceElement>("source[data-src]").forEach((source) => {
+                if (!source.src) source.src = source.dataset.src ?? "";
+              });
+              if (video.readyState === 0) video.load();
+              if (video.dataset.autoplayPreview === "true" && !reduceMotion) {
+                if (activePreview && activePreview !== video) activePreview.pause();
+                activePreview = video;
+                void video.play().catch(() => undefined);
+              }
+            } else {
+              video.pause();
+              if (activePreview === video) activePreview = null;
+            }
+          });
+        },
+        { rootMargin: "180px 0px", threshold: 0.25 }
+      );
+      document.querySelectorAll<HTMLVideoElement>("[data-lazy-video]").forEach((video) => {
+        videoObserver.observe(video);
+      });
+
+      document.querySelectorAll<HTMLAnchorElement>("[data-chapter-link]").forEach((link) => {
+        link.addEventListener("click", (event) => {
+          if (reduceMotion || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+          event.preventDefault();
+          const href = link.href;
+          const flash = document.querySelector<HTMLElement>(".chapter-flash");
+          if (!flash) {
+            window.location.href = href;
+            return;
+          }
+          flash.classList.add("is-active");
+          window.setTimeout(() => {
+            window.location.href = href;
+          }, 190);
+        });
+      });
+    </script>
+  </body>
+</html>

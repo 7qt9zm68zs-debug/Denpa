@@ -1,0 +1,76 @@
+[
+  {
+    "slug": "endless",
+    "title": "永不落幕",
+    "images": [
+      {
+        "src": "/media/games/endless/cover.webp",
+        "width": 2534,
+        "height": 1383
+      },
+      {
+        "src": "/media/games/endless/image-02.webp",
+        "width": 2493,
+        "height": 1392
+      },
+      {
+        "src": "/media/games/endless/image-03.webp",
+        "width": 2496,
+        "height": 1380
+      },
+      {
+        "src": "/media/games/endless/image-04.webp",
+        "width": 1541,
+        "height": 972
+      }
+    ]
+  },
+  {
+    "slug": "boom",
+    "title": "BOOM",
+    "images": [
+      {
+        "src": "/media/games/boom/cover.webp",
+        "width": 1086,
+        "height": 1448
+      },
+      {
+        "src": "/media/games/boom/image-02.webp",
+        "width": 2559,
+        "height": 1599
+      }
+    ]
+  },
+  {
+    "slug": "space-v",
+    "title": "SPACE V",
+    "images": [
+      {
+        "src": "/media/games/space-v/cover.webp",
+        "width": 2220,
+        "height": 1320
+      },
+      {
+        "src": "/media/games/space-v/image-02.webp",
+        "width": 2214,
+        "height": 1389
+      }
+    ]
+  },
+  {
+    "slug": "void",
+    "title": "虚无",
+    "images": [
+      {
+        "src": "/media/games/void/cover.webp",
+        "width": 1280,
+        "height": 540
+      },
+      {
+        "src": "/media/games/void/image-02.webp",
+        "width": 1280,
+        "height": 720
+      }
+    ]
+  }
+]

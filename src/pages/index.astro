@@ -1,0 +1,167 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import FeaturedNarrative from "@/components/FeaturedNarrative.astro";
+import profile from "@/content/profile.json";
+
+const chapters = [
+  { number: "01", eyebrow: "FICTION", title: "小说", href: "/fiction/" },
+  { number: "02", eyebrow: "ARTWORK", title: "画作", href: "/artworks/" },
+  { number: "03", eyebrow: "MOVING IMAGE", title: "影像", href: "/videos/" },
+  { number: "04", eyebrow: "GAMES", title: "游戏", href: "/games/" }
+];
+---
+
+<BaseLayout>
+  <section class="hero" data-grid-mode="dark" data-grid-strength="quiet">
+    <div class="hero__sticky shell">
+      <div class="hero__meta">
+        <span>ARCHIVE / 2024—2026</span>
+        <span>SHANGHAI TIME / OPEN</span>
+      </div>
+
+      <div class="hero__title-wrap">
+        <h1 class="hero__title" aria-label="Denpa"><span>DENPA</span></h1>
+        <p class="hero__role">{profile.role}</p>
+      </div>
+
+      <div class="hero__stage" data-reveal>
+        <div class="hero__statement">
+          <div class="hero__statement-copy">
+            <p class="hero__tagline">{profile.tagline}</p>
+            <p class="hero__intro">{profile.intro}</p>
+          </div>
+          <a class="text-link" href="#featured">进入档案 <span aria-hidden="true">↘</span></a>
+        </div>
+        <div class="hero__media">
+          <video
+            class="hero__video"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            aria-label="Denpa创作片段"
+          >
+            <source src="/media/home/hero-video.mp4" type="video/mp4" />
+          </video>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="literary-interlude" data-grid-mode="paper" data-grid-strength="quiet">
+    <div class="shell literary-interlude__inner" data-reveal>
+      <p class="eyebrow">TEXT FRAGMENT / 001</p>
+      <blockquote>
+        <span data-literary-line>“有些东西先以故事出现，</span>
+        <span data-literary-line>后来才变成画面、声音，</span>
+        <span data-literary-line>和一个能够行走的空间。”</span>
+      </blockquote>
+      <span class="literary-interlude__mark" aria-hidden="true">↘</span>
+    </div>
+  </section>
+
+  <FeaturedNarrative />
+
+  <section class="chapters section" data-grid-mode="dark" data-grid-strength="quiet">
+    <div class="shell chapter-list">
+      {chapters.map((chapter) => (
+        <a class="chapter-link" href={chapter.href} data-chapter-link data-reveal>
+          <span class="chapter-link__number">{chapter.number}</span>
+          <span class="chapter-link__eyebrow">{chapter.eyebrow}</span>
+          <strong>{chapter.title}</strong>
+          <span class="chapter-link__arrow" aria-hidden="true">↗</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="process section shell" data-grid-mode="dark" data-grid-strength="quiet">
+    <SectionHeading index="02" eyebrow="FROM IDEA TO FORM" title="让想法第一次拥有形状" />
+
+    <ol class="process__steps">
+      <li data-reveal>
+        <span>01</span>
+        <strong>一句模糊的话</strong>
+      </li>
+      <li data-reveal>
+        <span>02</span>
+        <strong>建立视觉与结构</strong>
+      </li>
+      <li data-reveal>
+        <span>03</span>
+        <strong>做成可运行原型</strong>
+      </li>
+    </ol>
+  </section>
+
+  <section class="manifesto" aria-label="创作方式" data-grid-mode="lime" data-grid-strength="quiet">
+    <div class="shell manifesto__inner">
+      <p>用最低的成本，一两个晚上，先让它存在，再把它变好。</p>
+    </div>
+  </section>
+
+  <section class="about section" id="about" data-grid-mode="paper" data-grid-strength="quiet">
+    <div class="shell about__grid">
+      <div>
+        <SectionHeading index="03" eyebrow="ABOUT DENPA" title="创作，也开发。" />
+      </div>
+      <div class="about__copy" data-reveal>
+        {profile.about.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+      <div class="timeline">
+        {profile.experience.map((item) => (
+          <article class="timeline__item" data-reveal>
+            <span>{item.year}</span>
+            <div>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="services section shell" data-grid-mode="dark" data-grid-strength="quiet">
+    <SectionHeading index="04" eyebrow="WHAT I CAN HELP WITH" title="我能帮你做什么？" />
+    <ul class="services__list">
+      {profile.services.map((service, index) => (
+        <li data-reveal>
+          <span>{String(index + 1).padStart(2, "0")}</span>
+          <strong>{service}</strong>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="contact-panel" id="contact" data-grid-mode="lime" data-grid-strength="quiet">
+    <div class="shell contact-panel__inner">
+      <span class="eyebrow">CONTACT / START WITH ONE SENTENCE</span>
+      <h2>我会认真倾听你的一切想法，并努力把它变成现实。</h2>
+      <p>你不需要懂任何技术，只要你有创意，有想法，有想要做的项目。不管有多么模糊，都有可能变成现实。</p>
+      <ul class="contact-panel__links" aria-label="联系方式">
+        <li class="contact-panel__link">
+          <span>绿泡泡</span>
+          <strong>{profile.contact.wechat}</strong>
+        </li>
+        <li class="contact-panel__link">
+          <span>小红书</span>
+          <strong>{profile.contact.xiaohongshu}</strong>
+        </li>
+        <li class="contact-panel__link">
+          <span>小黑盒</span>
+          <strong>{profile.contact.heybox}</strong>
+        </li>
+        <li>
+          <a class="contact-panel__link" href={`mailto:${profile.contact.email}`}>
+            <span>邮箱</span>
+            <strong>{profile.contact.email} <span aria-hidden="true">↗</span></strong>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+</BaseLayout>

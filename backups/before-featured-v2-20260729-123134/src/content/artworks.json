@@ -1,0 +1,30 @@
+[
+  {
+    "id": "art-01",
+    "src": "/media/artworks/art-01.webp",
+    "width": 1624,
+    "height": 969,
+    "orientation": "landscape"
+  },
+  {
+    "id": "art-02",
+    "src": "/media/artworks/art-02.webp",
+    "width": 1884,
+    "height": 1079,
+    "orientation": "landscape"
+  },
+  {
+    "id": "art-03",
+    "src": "/media/artworks/art-03.webp",
+    "width": 1103,
+    "height": 1426,
+    "orientation": "portrait"
+  },
+  {
+    "id": "art-04",
+    "src": "/media/artworks/art-04.webp",
+    "width": 1254,
+    "height": 1254,
+    "orientation": "square"
+  }
+]

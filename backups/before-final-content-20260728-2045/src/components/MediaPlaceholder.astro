@@ -1,0 +1,24 @@
+---
+interface Props {
+  variant?: string;
+  label?: string;
+  index?: string;
+  ratio?: "wide" | "portrait" | "square" | "hero";
+  interactive?: boolean;
+}
+
+const {
+  variant = "signal",
+  label = "PLACEHOLDER MEDIA",
+  index = "00",
+  ratio = "wide",
+  interactive = false
+} = Astro.props;
+---
+
+<div class:list={["media-placeholder", `is-${variant}`, `ratio-${ratio}`, { "is-interactive": interactive }]}>
+  <div class="placeholder-grid" aria-hidden="true"></div>
+  <span class="placeholder-index">{index}</span>
+  <span class="placeholder-label">{label}</span>
+  <span class="placeholder-cross" aria-hidden="true">+</span>
+</div>

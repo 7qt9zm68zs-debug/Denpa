@@ -1,0 +1,23 @@
+{
+  "name": "denpa-portfolio",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "astro": "5.12.8",
+    "gsap": "3.13.0",
+    "lenis": "1.3.3",
+    "sass": "1.89.2"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.4",
+    "typescript": "5.8.3",
+    "zod": "3.25.76"
+  }
+}

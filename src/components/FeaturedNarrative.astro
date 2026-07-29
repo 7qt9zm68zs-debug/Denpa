@@ -1,0 +1,905 @@
+---
+import SectionHeading from "@/components/SectionHeading.astro";
+
+const works = [
+  {
+    number: "01",
+    title: "偷灵魂的人",
+    type: "小说",
+    href: "/fiction/soul-thief/"
+  },
+  {
+    number: "02",
+    title: "绘画",
+    type: "绘画",
+    href: "/artworks/"
+  },
+  {
+    number: "03",
+    title: "我和我的空壳",
+    type: "影像",
+    href: "/videos/"
+  },
+  {
+    number: "04",
+    title: "永不落幕",
+    type: "游戏",
+    href: "/games/endless/"
+  }
+];
+---
+
+<section
+  class="featured-narrative section"
+  id="featured"
+  data-featured-narrative
+  data-grid-mode="dark"
+  data-grid-strength="active"
+>
+  <div class="shell featured-narrative__heading">
+    <SectionHeading index="01" eyebrow="SELECTED WORKS" title="节选作品" />
+  </div>
+
+  <div class="featured-narrative__track" data-featured-track>
+    <div class="featured-narrative__stage" data-featured-stage>
+      <nav class="featured-index" aria-label="节选作品索引">
+        <ol>
+          {
+            works.map((work, index) => (
+              <li>
+                <a
+                  class:list={["featured-index__link", { "is-active": index === 0 }]}
+                  href={work.href}
+                  data-feature-index-link={index}
+                  aria-current={index === 0 ? "true" : undefined}
+                >
+                  <span>{work.number}</span>
+                  <strong>{work.title}</strong>
+                  <em>{work.type}</em>
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+      </nav>
+
+      <a
+        class="featured-mobile-index"
+        href={works[0].href}
+        data-feature-mobile-index
+        aria-label={`打开${works[0].title}`}
+      >
+        <span data-feature-mobile-count>01 / 04</span>
+        <strong data-feature-mobile-title>{works[0].title}</strong>
+        <span aria-hidden="true">↗</span>
+      </a>
+
+      <div class="featured-narrative__canvas">
+        <a
+          class="featured-frame featured-frame--novel"
+          href={works[0].href}
+          data-feature-frame="0"
+          data-mobile-feature="0"
+          aria-label="阅读小说《偷灵魂的人》"
+        >
+          <p class="sr-only">
+            雨水冲刷着我的头发，露出原本的乏味的黑色。我假笑的伪装终于被撕下。我不得不面对那个我一味逃避的事实——母亲死了、父亲死了，他们就埋在坟墓里，永远永远不会回来。我不停追随着那些幻影，却离他们越来越远。
+          </p>
+          <div class="featured-novel__meta" aria-hidden="true">
+            <span>FICTION / 01</span>
+            <span>偷灵魂的人</span>
+          </div>
+          <div class="featured-novel__scenes" aria-hidden="true">
+            <div class="featured-novel__scene" data-novel-scene="0">
+              <p>雨水冲刷着我的头发，露出原本的乏味的黑色。</p>
+              <p>我假笑的伪装终于被撕下。</p>
+            </div>
+            <div class="featured-novel__scene" data-novel-scene="1">
+              <p>我不得不面对那个我一味逃避的事实——</p>
+              <p>母亲死了、父亲死了，他们就埋在坟墓里，永远永远不会回来。</p>
+            </div>
+            <div class="featured-novel__scene" data-novel-scene="2">
+              <p>我不停追随着那些幻影，却离他们越来越远。</p>
+            </div>
+          </div>
+        </a>
+
+        <a
+          class="featured-frame featured-frame--art"
+          href={works[1].href}
+          data-feature-frame="1"
+          data-mobile-feature="1"
+          aria-label="查看蓝色人物画"
+        >
+          <img
+            src="/media/artworks/art-02.webp"
+            width="1884"
+            height="1079"
+            alt="蓝色纸面上的人物近景线稿"
+            loading="eager"
+            decoding="async"
+          />
+        </a>
+
+        <a
+          class="featured-frame featured-frame--video"
+          href={works[2].href}
+          data-feature-frame="2"
+          data-mobile-feature="2"
+          aria-label="查看影像《我和我的空壳》"
+        >
+          <span class="featured-frame__paper" aria-hidden="true"></span>
+          <img
+            src="/media/videos/my-empty-shell/poster.webp"
+            width="1023"
+            height="579"
+            alt="《我和我的空壳》黑白城市线稿首帧"
+            loading="eager"
+            decoding="async"
+          />
+        </a>
+
+        <a
+          class="featured-frame featured-frame--game"
+          href={works[3].href}
+          data-feature-frame="3"
+          data-mobile-feature="3"
+          aria-label="查看游戏《永不落幕》"
+        >
+          <img
+            src="/media/games/endless/featured.webp"
+            width="2493"
+            height="1392"
+            alt="花丛中的人物与“她做到了”字幕画面"
+            loading="eager"
+            decoding="async"
+          />
+        </a>
+
+        <span class="featured-manga-reaction" aria-hidden="true" data-manga-reaction>
+          <img
+            src="/media/ui/manga-reaction-transparent.webp"
+            width="1254"
+            height="1254"
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+        </span>
+      </div>
+
+      <div class="featured-narrative__progress" aria-hidden="true">
+        <span data-feature-progress></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  const root = document.querySelector<HTMLElement>("[data-featured-narrative]");
+
+  if (root) {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const works = [
+      { number: "01", title: "偷灵魂的人", href: "/fiction/soul-thief/" },
+      { number: "02", title: "绘画", href: "/artworks/" },
+      { number: "03", title: "我和我的空壳", href: "/videos/" },
+      { number: "04", title: "永不落幕", href: "/games/endless/" }
+    ];
+    const indexLinks = Array.from(root.querySelectorAll<HTMLAnchorElement>("[data-feature-index-link]"));
+    const mobileIndex = root.querySelector<HTMLAnchorElement>("[data-feature-mobile-index]");
+    const mobileCount = root.querySelector<HTMLElement>("[data-feature-mobile-count]");
+    const mobileTitle = root.querySelector<HTMLElement>("[data-feature-mobile-title]");
+    const progress = root.querySelector<HTMLElement>("[data-feature-progress]");
+    let activeIndex = -1;
+
+    const setActive = (index: number) => {
+      const safeIndex = Math.max(0, Math.min(works.length - 1, index));
+      if (safeIndex === activeIndex) return;
+      activeIndex = safeIndex;
+
+      indexLinks.forEach((link, linkIndex) => {
+        const active = linkIndex === safeIndex;
+        link.classList.toggle("is-active", active);
+        if (active) link.setAttribute("aria-current", "true");
+        else link.removeAttribute("aria-current");
+      });
+
+      const work = works[safeIndex];
+      if (mobileIndex) {
+        mobileIndex.href = work.href;
+        mobileIndex.setAttribute("aria-label", `打开${work.title}`);
+      }
+      if (mobileCount) mobileCount.textContent = `${work.number} / 04`;
+      if (mobileTitle) mobileTitle.textContent = work.title;
+      root.dataset.activeFeature = String(safeIndex);
+    };
+
+    setActive(0);
+
+    const media = gsap.matchMedia();
+
+    media.add(
+      {
+        animatedDesktop: "(min-width: 721px) and (prefers-reduced-motion: no-preference)",
+        simplified: "(max-width: 720px), (prefers-reduced-motion: reduce)"
+      },
+      (context) => {
+        const conditions = context.conditions as {
+          animatedDesktop?: boolean;
+          simplified?: boolean;
+        };
+
+        if (conditions.animatedDesktop) {
+          const track = root.querySelector<HTMLElement>("[data-featured-track]");
+          const novel = root.querySelector<HTMLElement>('[data-feature-frame="0"]');
+          const art = root.querySelector<HTMLElement>('[data-feature-frame="1"]');
+          const video = root.querySelector<HTMLElement>('[data-feature-frame="2"]');
+          const game = root.querySelector<HTMLElement>('[data-feature-frame="3"]');
+          const scenes = Array.from(root.querySelectorAll<HTMLElement>("[data-novel-scene]"));
+          const artImage = art?.querySelector("img");
+          const videoImage = video?.querySelector("img");
+          const gameImage = game?.querySelector("img");
+          const manga = root.querySelector<HTMLElement>("[data-manga-reaction]");
+          const ambientGrid = document.querySelector<HTMLElement>("[data-ambient-grid]");
+
+          if (
+            !track ||
+            !novel ||
+            !art ||
+            !video ||
+            !game ||
+            !artImage ||
+            !videoImage ||
+            !gameImage ||
+            !manga ||
+            !ambientGrid ||
+            scenes.length !== 3
+          ) {
+            return;
+          }
+
+          gsap.set(novel, { autoAlpha: 1 });
+          gsap.set(scenes[0], {
+            autoAlpha: 1,
+            filter: "grayscale(.18) sepia(.08) hue-rotate(150deg) blur(12px)",
+            scale: 1.035
+          });
+          gsap.set(scenes.slice(1), { autoAlpha: 0 });
+          gsap.set([art, video, game], { autoAlpha: 0 });
+          gsap.set(art, { clipPath: "inset(0 94% 0 0)" });
+          gsap.set(video, { clipPath: "inset(0 34% 0 34%)" });
+          gsap.set(game, { clipPath: "inset(72% 0 0 0)" });
+          gsap.set(artImage, { scale: 1.055, xPercent: -2 });
+          gsap.set(videoImage, { scale: 1.055 });
+          gsap.set(gameImage, { scale: 1.035 });
+          gsap.set(manga, { autoAlpha: 0, yPercent: 52, rotate: 4, scale: 0.76 });
+          gsap.set(ambientGrid, { "--grid-depth": 0 });
+
+          const timeline = gsap.timeline({
+            defaults: { ease: "none" },
+            scrollTrigger: {
+              trigger: track,
+              start: "top top",
+              end: "bottom bottom",
+              scrub: 0.45,
+              invalidateOnRefresh: true,
+              onUpdate: (self) => {
+                const value = self.progress;
+                const index = value < 0.38 ? 0 : value < 0.57 ? 1 : value < 0.74 ? 2 : 3;
+                setActive(index);
+                if (progress) progress.style.transform = `scaleX(${value})`;
+              }
+            }
+          });
+
+          timeline
+            .to(scenes[0], { filter: "grayscale(.92) sepia(0) hue-rotate(0deg) blur(0px)", scale: 1, duration: 7 }, 0)
+            .to(ambientGrid, { "--grid-depth": 0.22, duration: 7 }, 0)
+            .to(scenes[0], { autoAlpha: 0, scale: 0.92, duration: 4 }, 9)
+            .fromTo(
+              scenes[1],
+              { autoAlpha: 0, yPercent: 16, filter: "brightness(.72)" },
+              { autoAlpha: 1, yPercent: 0, filter: "brightness(1)", duration: 5 },
+              11
+            )
+            .to(ambientGrid, { "--grid-depth": 0.58, duration: 7 }, 11)
+            .to(scenes[1], { autoAlpha: 0, filter: "brightness(.48)", duration: 4 }, 19)
+            .fromTo(
+              scenes[2],
+              { autoAlpha: 0, scale: 1.04 },
+              { autoAlpha: 1, scale: 1, duration: 4 },
+              21
+            )
+            .to(ambientGrid, { "--grid-depth": -0.22, duration: 9 }, 21)
+            .to(scenes[2], { autoAlpha: 0.08, scale: 0.54, yPercent: -38, filter: "blur(2px)", duration: 7 }, 28)
+            .to(novel, { autoAlpha: 0, scale: 0.93, duration: 3 }, 34)
+            .to(ambientGrid, { "--grid-depth": 0.9, duration: 5 }, 34)
+            .to(art, { autoAlpha: 1, clipPath: "inset(0 0% 0 0)", duration: 8 }, 35)
+            .to(artImage, { scale: 1, xPercent: 0, duration: 10 }, 35)
+            .to(art, { clipPath: "inset(12% 18% 12% 18%)", scale: 0.9, autoAlpha: 0.2, duration: 6 }, 51)
+            .to(ambientGrid, { "--grid-depth": 0.3, duration: 7 }, 51)
+            .to(video, { autoAlpha: 1, clipPath: "inset(0 0% 0 0%)", duration: 7 }, 52)
+            .to(videoImage, { scale: 1, duration: 11 }, 52)
+            .to(video, { filter: "brightness(.5)", scale: 0.96, duration: 5 }, 68)
+            .to(ambientGrid, { "--grid-depth": 0.08, duration: 7 }, 68)
+            .to(game, { autoAlpha: 1, clipPath: "inset(0% 0 0 0)", duration: 8 }, 69)
+            .to(gameImage, { scale: 1, duration: 15 }, 69)
+            .to(video, { autoAlpha: 0, duration: 4 }, 75)
+            .to(game, { scale: 0.91, clipPath: "inset(8% 8% 8% 8%)", duration: 7 }, 91)
+            .to(ambientGrid, { "--grid-depth": 0, duration: 7 }, 91)
+            .fromTo(
+              manga,
+              { autoAlpha: 0, yPercent: 52, rotate: 4, scale: 0.76 },
+              { autoAlpha: 1, yPercent: 0, rotate: 0, scale: 1.045, duration: 3 },
+              93
+            )
+            .to(manga, { scale: 1, duration: 2 }, 96)
+            .to(manga, { autoAlpha: 0, yPercent: 18, duration: 2 }, 98);
+
+          const refresh = () => ScrollTrigger.refresh();
+          const timer = window.setTimeout(refresh, 80);
+          const resizeObserver = new ResizeObserver(() => refresh());
+          resizeObserver.observe(root);
+          root.querySelectorAll("img").forEach((image) => {
+            if (!image.complete) image.addEventListener("load", refresh, { once: true });
+          });
+
+          return () => {
+            window.clearTimeout(timer);
+            resizeObserver.disconnect();
+            timeline.scrollTrigger?.kill();
+            timeline.kill();
+          };
+        }
+
+        const mobileSections = Array.from(root.querySelectorAll<HTMLElement>("[data-mobile-feature]"));
+        const rootObserver = new IntersectionObserver(
+          ([entry]) => {
+            root.classList.toggle("is-mobile-active", Boolean(entry?.isIntersecting));
+          },
+          { threshold: 0.01 }
+        );
+        const mobileTrack = root.querySelector<HTMLElement>("[data-featured-track]");
+        if (mobileTrack) rootObserver.observe(mobileTrack);
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const active = entries
+              .filter((entry) => entry.isIntersecting)
+              .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+            if (!active) return;
+            setActive(Number((active.target as HTMLElement).dataset.mobileFeature ?? 0));
+          },
+          { rootMargin: "-30% 0px -42% 0px", threshold: [0, 0.2, 0.5, 0.8] }
+        );
+        mobileSections.forEach((section) => observer.observe(section));
+        if (progress) progress.style.transform = "scaleX(1)";
+
+        return () => {
+          observer.disconnect();
+          rootObserver.disconnect();
+          root.classList.remove("is-mobile-active");
+        };
+      }
+    );
+  }
+</script>
+
+<style lang="scss">
+  .featured-narrative {
+    --stage-inline: min(78vw, 1320px);
+    background: rgba(17, 17, 17, 0.88);
+    color: var(--white);
+    overflow: clip;
+  }
+
+  .featured-narrative__heading {
+    padding-bottom: clamp(2rem, 4vw, 4rem);
+  }
+
+  .featured-narrative__track {
+    min-height: 485svh;
+    position: relative;
+  }
+
+  .featured-narrative__stage {
+    align-items: center;
+    display: grid;
+    height: 100svh;
+    isolation: isolate;
+    overflow: clip;
+    position: sticky;
+    top: 0;
+  }
+
+  .featured-narrative__canvas {
+    height: min(76svh, 820px);
+    justify-self: end;
+    margin-right: clamp(2rem, 4vw, 5.5rem);
+    position: relative;
+    width: var(--stage-inline);
+  }
+
+  .featured-frame {
+    color: inherit;
+    display: grid;
+    inset: 0;
+    overflow: hidden;
+    position: absolute;
+    text-decoration: none;
+    transform-origin: center;
+  }
+
+  .featured-frame:focus-visible {
+    outline: 2px solid var(--lime);
+    outline-offset: 8px;
+  }
+
+  .featured-frame--novel {
+    align-content: center;
+    background:
+      linear-gradient(90deg, rgba(17, 17, 17, 0.25), rgba(17, 17, 17, 0)),
+      transparent;
+    padding: clamp(2rem, 6vw, 7rem);
+  }
+
+  .featured-novel__meta {
+    display: flex;
+    font-family: var(--sans);
+    font-size: 0.7rem;
+    justify-content: space-between;
+    letter-spacing: 0.14em;
+    position: absolute;
+    text-transform: uppercase;
+    top: 0;
+    width: 100%;
+  }
+
+  .featured-novel__scenes {
+    align-items: center;
+    display: grid;
+    min-height: 56svh;
+    position: relative;
+  }
+
+  .featured-novel__scene {
+    grid-area: 1 / 1;
+    max-width: min(58rem, 70vw);
+    position: relative;
+    transform-origin: center;
+    width: 100%;
+  }
+
+  .featured-novel__scene p {
+    font-family: var(--serif);
+    font-size: clamp(1.7rem, 3.35vw, 4.7rem);
+    line-height: 1.36;
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  .featured-novel__scene p + p {
+    margin-top: 0.8em;
+  }
+
+  .featured-novel__scene[data-novel-scene="2"] p {
+    font-size: clamp(1.55rem, 3vw, 4.1rem);
+    white-space: nowrap;
+  }
+
+  .featured-frame--art,
+  .featured-frame--video,
+  .featured-frame--game {
+    align-items: center;
+    justify-items: center;
+  }
+
+  .featured-frame--art {
+    background: #7a98c9;
+  }
+
+  .featured-frame--video {
+    background: var(--paper);
+  }
+
+  .featured-frame--game {
+    background: #eee3d2;
+  }
+
+  .featured-frame--art img,
+  .featured-frame--video img,
+  .featured-frame--game img {
+    display: block;
+    height: 100%;
+    object-fit: contain;
+    position: relative;
+    width: 100%;
+    will-change: transform;
+  }
+
+  .featured-frame--art img {
+    object-position: center;
+  }
+
+  .featured-frame--video img {
+    object-fit: cover;
+  }
+
+  .featured-frame--game img {
+    object-fit: contain;
+  }
+
+  .featured-frame__paper {
+    background: var(--paper);
+    inset: 0;
+    position: absolute;
+  }
+
+  .featured-index {
+    left: clamp(1rem, 3vw, 3.5rem);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: clamp(10.75rem, 15vw, 14.5rem);
+    z-index: 4;
+  }
+
+  .featured-index ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .featured-index li + li {
+    border-top: 1px solid rgba(245, 244, 239, 0.18);
+  }
+
+  .featured-index__link {
+    align-items: baseline;
+    color: rgba(245, 244, 239, 0.42);
+    display: grid;
+    gap: 0.8rem;
+    grid-template-columns: 2rem 1fr auto;
+    min-height: 3.2rem;
+    padding: 0.82rem 0;
+    text-decoration: none;
+    transition:
+      color var(--motion-fast) var(--ease-emphasis),
+      padding-left var(--motion-fast) var(--ease-emphasis);
+  }
+
+  .featured-index__link span {
+    font-family: var(--sans);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+  }
+
+  .featured-index__link strong {
+    font-family: var(--sans);
+    font-size: clamp(0.82rem, 1vw, 1rem);
+    font-weight: 500;
+  }
+
+  .featured-index__link em {
+    font-size: 0.68rem;
+    font-style: normal;
+    opacity: 0.72;
+  }
+
+  .featured-index__link:is(:hover, :focus-visible, .is-active) {
+    color: var(--lime);
+    padding-left: 0.35rem;
+  }
+
+  .featured-index__link:focus-visible {
+    outline: 1px solid currentColor;
+    outline-offset: 4px;
+  }
+
+  .featured-mobile-index {
+    display: none;
+  }
+
+  .featured-narrative__progress {
+    background: rgba(245, 244, 239, 0.16);
+    bottom: 0;
+    height: 2px;
+    left: 0;
+    position: absolute;
+    right: 0;
+    z-index: 5;
+  }
+
+  .featured-narrative__progress span {
+    background: var(--lime);
+    display: block;
+    height: 100%;
+    transform: scaleX(0);
+    transform-origin: left center;
+    width: 100%;
+  }
+
+  .featured-manga-reaction {
+    align-items: center;
+    background: var(--lime);
+    bottom: -1.5rem;
+    clip-path: circle(48% at 50% 50%);
+    display: grid;
+    height: clamp(10rem, 18vw, 18rem);
+    pointer-events: none;
+    position: absolute;
+    right: -0.5rem;
+    width: clamp(10rem, 18vw, 18rem);
+    z-index: 6;
+  }
+
+  .featured-manga-reaction img {
+    display: block;
+    height: 100%;
+    object-fit: contain;
+    width: 100%;
+  }
+
+  @media (max-width: 1024px) and (min-width: 721px) {
+    .featured-narrative {
+      --stage-inline: 72vw;
+    }
+
+    .featured-narrative__canvas {
+      height: min(70svh, 680px);
+      margin-right: 2rem;
+    }
+
+    .featured-index {
+      width: 9.75rem;
+    }
+
+    .featured-novel__scene p {
+      font-size: clamp(1.55rem, 3.4vw, 2.7rem);
+    }
+  }
+
+  @media (max-width: 900px) and (min-width: 721px) {
+    .featured-narrative {
+      --stage-inline: 68vw;
+    }
+
+    .featured-narrative__canvas {
+      height: min(44vw, 25rem);
+      margin-right: 1.25rem;
+    }
+
+    .featured-novel__scenes {
+      min-height: 100%;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .featured-narrative {
+      --mobile-gutter: clamp(1rem, 5vw, 1.5rem);
+      overflow: visible;
+    }
+
+    .featured-narrative__heading {
+      padding-bottom: 0;
+    }
+
+    .featured-narrative__track {
+      min-height: 0;
+    }
+
+    .featured-narrative__stage {
+      display: block;
+      height: auto;
+      overflow: visible;
+      position: relative;
+      top: auto;
+    }
+
+    .featured-narrative__canvas {
+      display: grid;
+      gap: clamp(3.5rem, 12vw, 6rem);
+      height: auto;
+      margin: 0;
+      padding: clamp(1.5rem, 7vw, 3rem) var(--mobile-gutter) 5rem;
+      width: 100%;
+    }
+
+    .featured-frame {
+      inset: auto;
+      min-height: 0;
+      opacity: 1 !important;
+      position: relative;
+      transform: none !important;
+      visibility: visible !important;
+    }
+
+    .featured-frame--novel {
+      display: block;
+      padding: 0;
+    }
+
+    .featured-novel__meta {
+      margin-bottom: 1.5rem;
+      position: relative;
+      top: auto;
+    }
+
+    .featured-novel__scenes {
+      display: grid;
+      gap: 1.2rem;
+      min-height: 0;
+    }
+
+    .featured-novel__scene {
+      background: rgba(34, 34, 34, 0.74);
+      border-top: 1px solid rgba(191, 255, 0, 0.4);
+      max-width: none;
+      min-height: clamp(15rem, 58svh, 30rem);
+      opacity: 1 !important;
+      padding: clamp(1.35rem, 5vw, 2.5rem);
+      padding-bottom: clamp(5.25rem, 17vw, 6.25rem);
+      filter: none !important;
+      grid-area: auto;
+      transform: none !important;
+      visibility: visible !important;
+      width: auto;
+    }
+
+    .featured-novel__scene {
+      align-content: center;
+      display: grid;
+    }
+
+    .featured-novel__scene p {
+      font-size: clamp(1.35rem, 6.2vw, 2.5rem);
+      line-height: 1.48;
+      max-width: min(18em, 100%);
+    }
+
+    .featured-novel__scene[data-novel-scene="2"] p {
+      font-size: clamp(1.35rem, 6.2vw, 2.5rem);
+      white-space: normal;
+    }
+
+    .featured-frame--art,
+    .featured-frame--video,
+    .featured-frame--game {
+      aspect-ratio: 16 / 10;
+      clip-path: none !important;
+      display: grid;
+      filter: none !important;
+    }
+
+    .featured-frame--art img,
+    .featured-frame--game img {
+      object-fit: contain;
+    }
+
+    .featured-frame--video img {
+      object-fit: contain;
+    }
+
+    .featured-index {
+      display: none;
+    }
+
+    .featured-mobile-index {
+      align-items: center;
+      backdrop-filter: blur(14px);
+      background: rgba(17, 17, 17, 0.82);
+      border: 1px solid rgba(245, 244, 239, 0.22);
+      bottom: auto;
+      color: var(--white);
+      display: grid;
+      gap: 0.55rem;
+      grid-template-columns: auto 1fr auto;
+      left: var(--mobile-gutter);
+      min-height: 3rem;
+      padding: 0.72rem 0.85rem;
+      opacity: 0;
+      pointer-events: none;
+      position: fixed;
+      right: auto;
+      text-decoration: none;
+      top: max(0.8rem, env(safe-area-inset-top));
+      transform: translateY(calc(-100% - 1.25rem));
+      transition:
+        opacity var(--motion-fast) var(--ease-emphasis),
+        transform var(--motion-fast) var(--ease-emphasis);
+      z-index: 8;
+      width: min(11.5rem, calc(100vw - 2rem));
+    }
+
+    .featured-narrative.is-mobile-active .featured-mobile-index {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .featured-mobile-index span {
+      color: var(--lime);
+      font-family: var(--sans);
+      font-size: 0.66rem;
+      letter-spacing: 0.06em;
+    }
+
+    .featured-mobile-index strong {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      font-weight: 500;
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .featured-mobile-index:focus-visible {
+      outline: 2px solid var(--lime);
+      outline-offset: 3px;
+    }
+
+    .featured-narrative__progress,
+    .featured-manga-reaction {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .featured-narrative__track {
+      min-height: 0;
+    }
+
+    .featured-narrative__stage {
+      display: block;
+      height: auto;
+      overflow: visible;
+      position: relative;
+      top: auto;
+    }
+
+    .featured-narrative__canvas {
+      display: grid;
+      gap: clamp(2rem, 5vw, 4rem);
+      height: auto;
+      margin: 0 auto;
+      max-width: 76rem;
+      padding: 2rem 2rem 5rem;
+      width: 100%;
+    }
+
+    .featured-frame {
+      inset: auto;
+      min-height: clamp(22rem, 66svh, 46rem);
+      opacity: 1 !important;
+      position: relative;
+      transform: none !important;
+      visibility: visible !important;
+    }
+
+    .featured-novel__scenes {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .featured-novel__scene {
+      grid-area: auto;
+      opacity: 1 !important;
+      transform: none !important;
+      visibility: visible !important;
+    }
+
+    .featured-frame--art,
+    .featured-frame--video,
+    .featured-frame--game {
+      clip-path: none !important;
+      filter: none !important;
+    }
+
+    .featured-manga-reaction {
+      display: none;
+    }
+  }
+</style>

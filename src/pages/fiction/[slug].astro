@@ -1,0 +1,74 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import novels from "@/content/novels.json";
+
+export function getStaticPaths() {
+  return novels.map((novel) => ({
+    params: { slug: novel.slug },
+    props: { novel }
+  }));
+}
+
+const { novel } = Astro.props;
+const chapters = novel.chapters.map((chapter) => ({
+  title: "title" in chapter ? chapter.title : "",
+  paragraphs: chapter.paragraphs
+}));
+const hasNamedChapters = chapters.some((chapter) => Boolean(chapter.title));
+---
+
+<BaseLayout
+  title={`${novel.title} — DENPA`}
+  description={`阅读Denpa的小说《${novel.title}》。`}
+  theme="paper"
+  readerTheme
+>
+  <div class="reading-progress" aria-hidden="true"><span data-reading-progress></span></div>
+
+  <article class="reader shell">
+    <header class="reader__header">
+      <a class="text-link" href="/fiction/">← 返回小说与中短篇故事</a>
+      <button class="theme-switch" type="button" data-theme-toggle aria-pressed="false">
+        切换明暗
+      </button>
+      <h1>{novel.title}</h1>
+    </header>
+
+    {hasNamedChapters && (
+      <nav class="reader__toc" aria-label="章节目录">
+        <span>目录</span>
+        <ol>
+          {chapters.map((chapter, index) => (
+            chapter.title && <li><a href={`#chapter-${index + 1}`}>{chapter.title}</a></li>
+          ))}
+        </ol>
+      </nav>
+    )}
+
+    <div class="reader__body">
+      {chapters.map((chapter, index) => (
+        <section id={`chapter-${index + 1}`} class="reader__chapter">
+          {chapter.title && <h2>{chapter.title}</h2>}
+          {chapter.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+        </section>
+      ))}
+    </div>
+
+    <footer class="reader__end">
+      <span>END</span>
+      <a class="text-link" href="/fiction/">阅读其他作品 ↗</a>
+    </footer>
+  </article>
+
+  <script>
+    const bar = document.querySelector<HTMLElement>("[data-reading-progress]");
+    const update = () => {
+      if (!bar) return;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+      bar.style.transform = `scaleX(${progress})`;
+    };
+    window.addEventListener("scroll", update, { passive: true });
+    update();
+  </script>
+</BaseLayout>

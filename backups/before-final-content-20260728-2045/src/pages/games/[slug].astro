@@ -1,0 +1,67 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ProjectVisual from "@/components/ProjectVisual.astro";
+import games from "@/content/games.json";
+
+export function getStaticPaths() {
+  return games.map((game) => ({
+    params: { slug: game.slug },
+    props: { game }
+  }));
+}
+
+const { game } = Astro.props;
+---
+
+<BaseLayout title={`${game.title} — Denpa`} description={game.summary}>
+  <article class="project-detail">
+    <header class="project-detail__hero shell">
+      <a class="text-link" href="/games/">← 返回游戏档案</a>
+      <div class="project-detail__heading">
+        <p class="eyebrow">{game.number} / {game.category} / {game.year}</p>
+        <h1>{game.englishTitle}</h1>
+        <p>{game.summary}</p>
+      </div>
+      <ProjectVisual
+        variant={game.variant}
+        title={game.title}
+        number={game.number}
+        ratio="hero"
+      />
+    </header>
+
+    <div class="project-detail__body shell section">
+      <section data-reveal>
+        <span class="eyebrow">ABOUT THE PROJECT</span>
+        <h2>这个想法是什么</h2>
+        <p>{game.description}</p>
+      </section>
+
+      <aside class="project-facts" data-reveal>
+        <div>
+          <span>STATUS</span>
+          <strong>{game.status}</strong>
+        </div>
+        <div>
+          <span>ROLE</span>
+          <strong>{game.role.join(" / ")}</strong>
+        </div>
+        <div>
+          <span>FOCUS</span>
+          <strong>{game.highlights.join(" / ")}</strong>
+        </div>
+      </aside>
+
+      <section class="project-next" data-reveal>
+        <span class="eyebrow">NEXT ITERATION</span>
+        <h2>下一步</h2>
+        <p>{game.next}</p>
+      </section>
+
+      <div class="project-detail__frames">
+        <ProjectVisual variant={`${game.variant}-a`} title="FRAME / 01" number="01" ratio="wide" />
+        <ProjectVisual variant={`${game.variant}-b`} title="FRAME / 02" number="02" ratio="wide" />
+      </div>
+    </div>
+  </article>
+</BaseLayout>

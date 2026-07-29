@@ -1,0 +1,331 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import MediaPlaceholder from "@/components/MediaPlaceholder.astro";
+import ProjectVisual from "@/components/ProjectVisual.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import profile from "@/content/profile.json";
+import novels from "@/content/novels.json";
+import games from "@/content/games.json";
+
+const featured = [
+  {
+    ...games[0],
+    href: `/games/${games[0].slug}/`
+  },
+  {
+    ...games[1],
+    href: `/games/${games[1].slug}/`
+  },
+  {
+    number: novels[0].number,
+    title: novels[0].title,
+    englishTitle: "FICTION",
+    year: novels[0].year,
+    category: "短篇小说",
+    status: novels[0].status,
+    variant: "fiction",
+    summary: novels[0].excerpt,
+    href: `/fiction/${novels[0].slug}/`
+  },
+  {
+    ...games[2],
+    href: `/games/${games[2].slug}/`
+  }
+];
+
+const chapters = [
+  {
+    number: "01",
+    eyebrow: "FICTION",
+    title: "小说",
+    copy: "短篇、手稿与仍在生长的梦境档案。",
+    href: "/fiction/"
+  },
+  {
+    number: "02",
+    eyebrow: "ARTWORK",
+    title: "画作",
+    copy: "绘画、漫画、分镜与视觉碎片。",
+    href: "/artworks/"
+  },
+  {
+    number: "03",
+    eyebrow: "MOVING IMAGE",
+    title: "影像",
+    copy: "游戏实机、过程短片与运动实验。",
+    href: "/videos/"
+  },
+  {
+    number: "04",
+    eyebrow: "GAMES",
+    title: "游戏",
+    copy: "从机制测试到可运行的互动原型。",
+    href: "/games/"
+  }
+];
+---
+
+<BaseLayout>
+  <section class="hero">
+    <div class="hero__sticky shell">
+    <div class="hero__meta">
+      <span>ARCHIVE / 2024—2026</span>
+      <span>SHANGHAI TIME / OPEN</span>
+    </div>
+
+    <div class="hero__title-wrap">
+      <h1 class="hero__title" aria-label="Denpa">
+        <span>DEN</span><span>PA</span>
+      </h1>
+      <p class="hero__role">{profile.role}</p>
+    </div>
+
+    <div class="hero__stage" data-reveal>
+      <div class="hero__statement">
+        <div class="hero__statement-copy">
+          <p class="hero__tagline">{profile.tagline}</p>
+          <p class="hero__intro">{profile.intro}</p>
+        </div>
+        <a class="text-link" href="#featured">进入档案 <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero__media" aria-label="首页视频占位。替换素材后将静音循环播放。">
+        <MediaPlaceholder
+          variant="signal"
+          index="00:15"
+          label="MOTION PLACEHOLDER / REPLACE WITH MP4"
+          ratio="hero"
+        />
+        <span class="hero__media-note">MUTED / LOOP / PLACEHOLDER</span>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <section class="literary-interlude">
+    <div class="shell literary-interlude__inner" data-reveal>
+      <p class="eyebrow">TEXT FRAGMENT / 001</p>
+      <blockquote aria-label="有些东西先以故事出现，后来才变成画面、声音，和一个能够行走的空间。">
+        <span data-literary-line>“有些东西先以故事出现，</span>
+        <span data-literary-line>后来才变成画面、声音，</span>
+        <span data-literary-line>和一个能够行走的空间。”</span>
+      </blockquote>
+      <span class="literary-interlude__mark" aria-hidden="true">↘</span>
+    </div>
+  </section>
+
+  <section class="featured shell section" id="featured">
+    <SectionHeading
+      index="01"
+      eyebrow="SELECTED WORKS"
+      title="被选中的信号"
+      description="把鼠标或键盘焦点移到项目标题，右侧预览会随之改变。"
+    />
+
+    <div class="featured__layout">
+      <ol class="featured__list" aria-label="精选项目">
+        {featured.map((item, index) => (
+          <li>
+            <a
+              class:list={["featured__item", { "is-active": index === 0 }]}
+              href={item.href}
+              data-feature-item
+              data-title={item.title}
+              data-number={item.number}
+              data-category={item.category}
+              data-variant={item.variant}
+              aria-describedby={`featured-summary-${index}`}
+            >
+              <span class="featured__number">{item.number}</span>
+              <span class="featured__name">
+                <strong>{item.title}</strong>
+                <small>{item.category} / {item.year}</small>
+              </span>
+              <span class="featured__status">{item.status}</span>
+              <span class="featured__arrow" aria-hidden="true">↗</span>
+            </a>
+            <span class="sr-only" id={`featured-summary-${index}`}>{item.summary}</span>
+          </li>
+        ))}
+      </ol>
+
+      <div class="featured__preview" aria-live="polite">
+        <div data-feature-visual>
+          <ProjectVisual
+            variant={featured[0].variant}
+            title={featured[0].title}
+            number={featured[0].number}
+            ratio="portrait"
+          />
+        </div>
+        <div class="featured__preview-meta">
+          <span data-feature-category>{featured[0].category}</span>
+          <span data-feature-title>{featured[0].title}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapters section">
+    <div class="shell">
+      <SectionHeading
+        index="02"
+        eyebrow="FOUR ENTRANCES"
+        title="四个入口，一份档案"
+        description="不同媒介使用不同节奏，但共享同一套视觉秩序。"
+      />
+
+      <div class="chapter-list">
+        {chapters.map((chapter) => (
+          <a class="chapter-link" href={chapter.href} data-chapter-link data-reveal>
+            <span class="chapter-link__number">{chapter.number}</span>
+            <span class="chapter-link__eyebrow">{chapter.eyebrow}</span>
+            <strong>{chapter.title}</strong>
+            <p>{chapter.copy}</p>
+            <span class="chapter-link__arrow" aria-hidden="true">↗</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="process section shell">
+    <SectionHeading
+      index="03"
+      eyebrow="FROM IDEA TO FORM"
+      title="让想法第一次拥有形状"
+      description="从一句话开始，把最核心的体验压缩成一个可见、可操作、可验证的版本。"
+    />
+
+    <ol class="process__steps">
+      <li data-reveal>
+        <span>01</span>
+        <strong>一句模糊的话</strong>
+        <p>故事、问题、玩法，或者一段难以说明的感觉。</p>
+      </li>
+      <li data-reveal>
+        <span>02</span>
+        <strong>建立视觉与结构</strong>
+        <p>整理核心体验，选择画面、声音和最小功能。</p>
+      </li>
+      <li data-reveal>
+        <span>03</span>
+        <strong>做成可运行原型</strong>
+        <p>先让它能够被看见和体验，再决定下一步。</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="about section" id="about">
+    <div class="shell about__grid">
+      <div>
+        <SectionHeading index="04" eyebrow="ABOUT DENPA" title="创作，也开发。" />
+      </div>
+      <div class="about__copy" data-reveal>
+        {profile.about.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+      <div class="timeline">
+        {profile.experience.map((item) => (
+          <article class="timeline__item" data-reveal>
+            <span>{item.year}</span>
+            <div>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="services section shell">
+    <SectionHeading
+      index="05"
+      eyebrow="WHAT I CAN HELP WITH"
+      title="先把问题说清楚，再开始做。"
+      description="适合范围明确的小型工具、游戏 Demo 与创意原型。复杂项目会先评估和验证。"
+    />
+    <ul class="services__list">
+      {profile.services.map((service, index) => (
+        <li data-reveal>
+          <span>{String(index + 1).padStart(2, "0")}</span>
+          <strong>{service}</strong>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="contact-panel" id="contact">
+    <div class="shell contact-panel__inner">
+      <span class="eyebrow">CONTACT / START WITH ONE SENTENCE</span>
+      <h2>告诉我，你想让什么<br />第一次成为现实。</h2>
+      <p>暂时不用讲技术。说清楚你遇到的问题、希望看到的结果，以及最重要的一件事。</p>
+      <ul class="contact-panel__links" aria-label="联系方式">
+        <li class="contact-panel__link">
+          <span>绿泡泡</span>
+          <strong>{profile.contact.wechat}</strong>
+        </li>
+        <li class="contact-panel__link">
+          <span>小红书</span>
+          <strong>{profile.contact.xiaohongshu}</strong>
+        </li>
+        <li class="contact-panel__link">
+          <span>小黑盒</span>
+          <strong>{profile.contact.heybox}</strong>
+        </li>
+        <li>
+          <a class="contact-panel__link" href={`mailto:${profile.contact.email}`}>
+            <span>邮箱</span>
+            <strong>{profile.contact.email} <span aria-hidden="true">↗</span></strong>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <script>
+    const items = Array.from(document.querySelectorAll<HTMLElement>("[data-feature-item]"));
+    const visual = document.querySelector<HTMLElement>("[data-feature-visual]");
+    const title = document.querySelector<HTMLElement>("[data-feature-title]");
+    const category = document.querySelector<HTMLElement>("[data-feature-category]");
+
+    const activate = (item: HTMLElement) => {
+      items.forEach((candidate) => candidate.classList.toggle("is-active", candidate === item));
+      if (!visual || !title || !category) return;
+
+      const variant = item.dataset.variant ?? "signal";
+      const number = item.dataset.number ?? "00";
+      const nextTitle = item.dataset.title ?? "Untitled";
+      visual.innerHTML = `
+        <div class="media-placeholder is-${variant} ratio-portrait is-interactive">
+          <div class="placeholder-grid" aria-hidden="true"></div>
+          <span class="placeholder-index">${number}</span>
+          <span class="placeholder-label">${nextTitle}</span>
+          <span class="placeholder-cross" aria-hidden="true">+</span>
+        </div>
+      `;
+      title.textContent = nextTitle;
+      category.textContent = item.dataset.category ?? "";
+    };
+
+    items.forEach((item) => {
+      item.addEventListener("mouseenter", () => activate(item));
+      item.addEventListener("focus", () => activate(item));
+    });
+
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches && window.innerWidth > 720) {
+      import("gsap").then(async ({ default: gsap }) => {
+        const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+        gsap.registerPlugin(ScrollTrigger);
+        items.forEach((item) => {
+          ScrollTrigger.create({
+            trigger: item,
+            start: "top 58%",
+            end: "bottom 42%",
+            onEnter: () => activate(item),
+            onEnterBack: () => activate(item)
+          });
+        });
+      });
+    }
+  </script>
+</BaseLayout>

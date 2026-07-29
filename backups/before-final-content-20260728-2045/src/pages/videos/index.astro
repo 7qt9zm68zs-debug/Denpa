@@ -1,0 +1,52 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import MediaPlaceholder from "@/components/MediaPlaceholder.astro";
+import videos from "@/content/videos.json";
+---
+
+<BaseLayout title="影像档案 — Denpa" description="Denpa 的实机片段、过程影像与运动实验。">
+  <section class="archive-hero shell">
+    <p class="eyebrow">03 / MOVING IMAGE</p>
+    <h1>让静止的东西，<br />开始呼吸。</h1>
+    <p>短片、实机演示与创作过程。占位视频会在添加真实素材后按需加载。</p>
+  </section>
+
+  <section class="video-index shell section">
+    {videos.map((video, index) => (
+      <article class="video-entry" data-reveal>
+        <div class="video-entry__media">
+          {video.src ? (
+            <video
+              controls
+              preload="none"
+              poster={video.poster ?? undefined}
+              aria-label={video.title}
+              data-lazy-video
+            >
+              <source data-src={video.src} type="video/mp4" />
+            </video>
+          ) : (
+            <MediaPlaceholder
+              variant={video.variant}
+              label="VIDEO PLACEHOLDER / ADD MP4"
+              index={video.duration}
+              ratio="wide"
+              interactive
+            />
+          )}
+          <span class="video-entry__count">{String(index + 1).padStart(2, "0")}</span>
+        </div>
+        <div class="video-entry__meta">
+          <span>{video.id} / {video.type}</span>
+          <h2>{video.title}</h2>
+          <p>{video.description}</p>
+          <div>
+            <span>{video.year}</span>
+            <span>{video.duration}</span>
+            <span>{video.src ? "PLAY" : "MEDIA PENDING"}</span>
+          </div>
+        </div>
+      </article>
+    ))}
+  </section>
+</BaseLayout>

@@ -1,0 +1,56 @@
+[
+  {
+    "id": "A-01",
+    "title": "Signal Garden",
+    "year": "2026",
+    "medium": "Digital / Placeholder",
+    "orientation": "landscape",
+    "variant": "acid",
+    "description": "统一抽象占位视觉，之后替换为真实画作。"
+  },
+  {
+    "id": "A-02",
+    "title": "The Quiet Machine",
+    "year": "2025",
+    "medium": "Ink / Placeholder",
+    "orientation": "portrait",
+    "variant": "paper",
+    "description": "用于测试竖幅作品在画廊中的比例。"
+  },
+  {
+    "id": "A-03",
+    "title": "Night Index",
+    "year": "2026",
+    "medium": "Digital / Placeholder",
+    "orientation": "square",
+    "variant": "grid",
+    "description": "方形作品占位。"
+  },
+  {
+    "id": "A-04",
+    "title": "Soft Error",
+    "year": "2026",
+    "medium": "Mixed Media / Placeholder",
+    "orientation": "landscape",
+    "variant": "noise",
+    "description": "横幅作品占位。"
+  },
+  {
+    "id": "A-05",
+    "title": "Afterimage",
+    "year": "2025",
+    "medium": "Comic / Placeholder",
+    "orientation": "portrait",
+    "variant": "frame",
+    "description": "漫画或分镜页占位。"
+  },
+  {
+    "id": "A-06",
+    "title": "Archive Fragment",
+    "year": "2024",
+    "medium": "Sketch / Placeholder",
+    "orientation": "square",
+    "variant": "carbon",
+    "description": "早期草图与创作档案占位。"
+  }
+]
