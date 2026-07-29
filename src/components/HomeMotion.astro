@@ -76,19 +76,20 @@
               defaults: { ease: motion.easeStandard },
               scrollTrigger: {
                 trigger: process,
-                start: "top 82%",
-                end: "bottom 24%",
+                start: "top 76%",
+                end: "bottom 8%",
                 scrub: motion.scrub,
                 invalidateOnRefresh: true
               }
             });
 
             processTimeline
+              .addLabel("heading:enter", 0)
               .fromTo(
                 processHeading,
                 { autoAlpha: 0, scale: 0.76, filter: "blur(3px)", transformOrigin: "center" },
-                { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 2.6 },
-                0
+                { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 2.8 },
+                "heading:enter"
               )
               .to(
                 grid,
@@ -96,15 +97,17 @@
                   "--grid-far-scale": 1.035,
                   "--grid-mid-scale": 1.11,
                   "--grid-transition-boost": 0.55,
-                  duration: 2.6
+                  duration: 2.8
                 },
-                0
+                "heading:enter"
               )
+              .addLabel("heading:settled", 2.8)
+              .addLabel("idea:enter", 3.8)
               .fromTo(
                 processSteps[0],
                 { autoAlpha: 0, clipPath: "inset(0 48% 0 48%)", scale: 0.9 },
                 { autoAlpha: 1, clipPath: "inset(0 0% 0 0%)", scale: 1, duration: 2.8 },
-                2.4
+                "idea:enter"
               )
               .to(
                 grid,
@@ -114,9 +117,17 @@
                   "--grid-transition-boost": 0.25,
                   duration: 2.8
                 },
-                2.4
+                "idea:enter"
               )
-              .to(processSteps[0], { scale: 0.92, autoAlpha: 0.78, duration: 1.7 }, 5)
+              .addLabel("idea:settled", 6.6)
+              .addLabel("idea:exit", 10.8)
+              .to(
+                processSteps[0],
+                { autoAlpha: 0, scale: 0.92, filter: "blur(2px)", duration: 2.8 },
+                "idea:exit"
+              )
+              .addLabel("idea:next", 13.6)
+              .addLabel("structure:enter", "idea:next")
               .fromTo(
                 processSteps[1],
                 {
@@ -130,9 +141,9 @@
                   clipPath: "inset(0% 0% 0% 0%)",
                   scale: 1,
                   filter: "blur(0px)",
-                  duration: 3
+                  duration: 2.8
                 },
-                5.2
+                "structure:enter"
               )
               .to(
                 grid,
@@ -140,21 +151,26 @@
                   "--grid-far-scale": 0.98,
                   "--grid-mid-scale": 1.14,
                   "--grid-mid-y": "-14px",
-                  duration: 3
+                  duration: 2.8
                 },
-                5.2
+                "structure:enter"
               )
-              .to(processSteps[1], { scale: 1.07, duration: 1.2 }, 8)
+              .addLabel("structure:settled", 16.4)
+              .to(processSteps[1], { scale: 1.07, duration: 1 }, "structure:settled")
+              .to(processSteps[1], { scale: 1, duration: 1 }, 17.4)
+              .addLabel("structure:exit", 20.6)
               .to(
                 processSteps[1],
-                { scale: 0.82, autoAlpha: 0.42, filter: "blur(2px)", duration: 1.8 },
-                9.1
+                { scale: 0.82, autoAlpha: 0, filter: "blur(2px)", duration: 2.8 },
+                "structure:exit"
               )
+              .addLabel("structure:next", 23.4)
+              .addLabel("prototype:enter", "structure:next")
               .fromTo(
                 processSteps[2],
                 { autoAlpha: 0, scale: 0.72, filter: "blur(3px)" },
                 { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 2.8 },
-                9.3
+                "prototype:enter"
               )
               .to(
                 grid,
@@ -167,8 +183,16 @@
                   "--grid-transition-boost": 0,
                   duration: 2.8
                 },
-                9.3
-              );
+                "prototype:enter"
+              )
+              .addLabel("prototype:settled", 26.2)
+              .to(
+                processSteps[2],
+                { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 4.2, ease: "none" },
+                "prototype:settled"
+              )
+              .addLabel("prototype:exit", 30.4)
+              .addLabel("prototype:next", 31.4);
             animations.push(processTimeline);
           } else {
             [processHeading, ...processSteps].forEach((element) => {
@@ -193,25 +217,36 @@
         const manifestoCopy = manifesto?.querySelector<HTMLElement>(".manifesto__inner");
         if (manifesto && manifestoCopy) {
           const manifestoTimeline = gsap.timeline({
+            defaults: { ease: motion.easeStandard },
             scrollTrigger: {
               trigger: manifesto,
-              start: "top 84%",
-              end: conditions.desktop ? "top 28%" : "top 58%",
+              start: "top 72%",
+              end: conditions.desktop ? "top 22%" : "top 58%",
               scrub: conditions.desktop ? motion.scrub : false,
               once: !conditions.desktop
             }
           });
-          manifestoTimeline.fromTo(
-            manifestoCopy,
-            { autoAlpha: 0, scale: conditions.desktop ? 0.72 : 0.9, filter: "blur(3px)" },
-            {
-              autoAlpha: 1,
-              scale: 1,
-              filter: "blur(0px)",
-              duration: motion.slow,
-              ease: motion.easeStandard
-            }
-          );
+          manifestoTimeline
+            .addLabel("enter", 0)
+            .fromTo(
+              manifestoCopy,
+              { autoAlpha: 0, scale: conditions.desktop ? 0.72 : 0.9, filter: "blur(3px)" },
+              {
+                autoAlpha: 1,
+                scale: 1,
+                filter: "blur(0px)",
+                duration: 2.8
+              },
+              "enter"
+            )
+            .addLabel("settled", 2.8)
+            .to(
+              manifestoCopy,
+              { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 4.2, ease: "none" },
+              "settled"
+            )
+            .addLabel("exit", 7)
+            .addLabel("next", 10);
           animations.push(manifestoTimeline);
         }
 
@@ -219,15 +254,17 @@
         const servicesHeading = services?.querySelector<HTMLElement>(".section-heading");
         if (services && servicesHeading) {
           const servicesTimeline = gsap.timeline({
+            defaults: { ease: motion.easeStandard },
             scrollTrigger: {
               trigger: services,
-              start: "top 86%",
-              end: conditions.desktop ? "top 32%" : "top 60%",
+              start: "top 78%",
+              end: conditions.desktop ? "top 30%" : "top 60%",
               scrub: conditions.desktop ? motion.scrub : false,
               once: !conditions.desktop
             }
           });
           servicesTimeline
+            .addLabel("enter", 0)
             .fromTo(
               servicesHeading,
               {
@@ -242,9 +279,9 @@
                 scale: 1,
                 yPercent: 0,
                 filter: "blur(0px)",
-                duration: motion.slow,
-                ease: motion.easeStandard
-              }
+                duration: 2.8
+              },
+              "enter"
             )
             .to(
               grid,
@@ -252,10 +289,18 @@
                 "--grid-far-scale": 0.96,
                 "--grid-mid-scale": 0.9,
                 "--grid-transition-boost": 0.24,
-                duration: motion.slow
+                duration: 2.8
               },
-              0
-            );
+              "enter"
+            )
+            .addLabel("settled", 2.8)
+            .to(
+              servicesHeading,
+              { autoAlpha: 1, scale: 1, yPercent: 0, filter: "blur(0px)", duration: 4.2, ease: "none" },
+              "settled"
+            )
+            .addLabel("exit", 7)
+            .addLabel("next", 10);
           animations.push(servicesTimeline);
         }
 
@@ -272,18 +317,20 @@
             defaults: { ease: motion.easeStandard },
             scrollTrigger: {
               trigger: contact,
-              start: "top 120%",
-              end: conditions.desktop ? "top 14%" : "top 52%",
+              start: "top 74%",
+              end: conditions.desktop ? "top 18%" : "top 52%",
               scrub: conditions.desktop ? motion.scrub : false,
               once: !conditions.desktop
             }
           });
 
           contactTimeline
+            .addLabel("enter", 0)
             .fromTo(
               wash,
               { clipPath: "inset(46% 47% 46% 47%)" },
-              { clipPath: "inset(0% 0% 0% 0%)", duration: 3.2 }
+              { clipPath: "inset(0% 0% 0% 0%)", duration: 2.8 },
+              "enter"
             )
             .to(
               grid,
@@ -291,26 +338,27 @@
                 "--grid-far-scale": 1.04,
                 "--grid-mid-scale": 1.16,
                 "--grid-transition-boost": 0.9,
-                duration: 2.2
+                duration: 2.8
               },
-              0
+              "enter"
             )
             .fromTo(
               statement,
-              { autoAlpha: 0, filter: "blur(4px)", scale: 0.94 },
-              { autoAlpha: 0.56, filter: "blur(2px)", scale: 0.98, duration: 1.4 },
-              1.7
-            )
-            .to(
-              statement,
-              { autoAlpha: 1, filter: "blur(0px)", scale: 1, duration: 1.4 },
-              2.7
+              { autoAlpha: 0, filter: "blur(3px)", scale: 0.94 },
+              { autoAlpha: 1, filter: "blur(0px)", scale: 1, duration: 2.8 },
+              "enter"
             )
             .fromTo(
               contactRest,
               { autoAlpha: 0, filter: "blur(2px)" },
-              { autoAlpha: 1, filter: "blur(0px)", duration: 1.5, stagger: 0.08 },
-              3
+              { autoAlpha: 1, filter: "blur(0px)", duration: 1.8, stagger: 0.08 },
+              1
+            )
+            .addLabel("settled", 2.8)
+            .to(
+              [statement, ...contactRest],
+              { autoAlpha: 1, filter: "blur(0px)", duration: 4.2, ease: "none" },
+              "settled"
             )
             .to(
               grid,
@@ -318,10 +366,12 @@
                 "--grid-far-scale": 1,
                 "--grid-mid-scale": 1,
                 "--grid-transition-boost": 0.08,
-                duration: 1.6
+                duration: 2.4
               },
-              3.8
-            );
+              "settled"
+            )
+            .addLabel("exit", 7)
+            .addLabel("next", 10);
           animations.push(contactTimeline);
         }
 
