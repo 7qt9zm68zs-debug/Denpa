@@ -22,16 +22,24 @@
   --type-statement: clamp(2.35rem, 5.4vw, 6.6rem);
   --type-body: clamp(0.98rem, 1.15vw, 1.12rem);
   --motion-fast: 0.45s;
-  --motion-normal: 0.85s;
-  --motion-slow: 1.25s;
+  --motion-normal: 0.8s;
+  --motion-slow: 1.2s;
   --ease-standard: cubic-bezier(0.65, 0, 0.35, 1);
   --ease-emphasis: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-exit: cubic-bezier(0.7, 0, 0.84, 0);
-  --grid-far-size: 132px;
-  --grid-mid-size: 66px;
-  --grid-far-alpha: 0.032;
-  --grid-mid-alpha: 0.044;
-  --grid-depth: 0;
+  --grid-far-size: 192px;
+  --grid-mid-size: 88px;
+  --grid-far-alpha: 0.04;
+  --grid-mid-alpha: 0.058;
+  --grid-far-x: 0px;
+  --grid-far-y: 0px;
+  --grid-far-scale: 1;
+  --grid-far-rotate: 0deg;
+  --grid-mid-x: 0px;
+  --grid-mid-y: 0px;
+  --grid-mid-scale: 1;
+  --grid-mid-rotate: 0deg;
+  --grid-transition-boost: 0;
   --grid-color-rgb: 245, 244, 239;
 }
 
@@ -69,13 +77,13 @@ body {
 main,
 .site-footer {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .ambient-grid {
   position: fixed;
-  z-index: 0;
-  inset: -8%;
+  z-index: 1;
+  inset: -14%;
   overflow: hidden;
   pointer-events: none;
   opacity: 1;
@@ -90,14 +98,34 @@ main,
   --grid-color-rgb: 20, 20, 20;
 }
 
+.ambient-grid[data-mode="paper"] {
+  --grid-far-alpha-current: 0.028;
+  --grid-mid-alpha-current: 0.042;
+}
+
+.ambient-grid[data-mode="lime"] {
+  --grid-far-alpha-current: 0.032;
+  --grid-mid-alpha-current: 0.048;
+}
+
 .ambient-grid[data-strength="quiet"] {
-  --grid-far-alpha-current: 0.026;
-  --grid-mid-alpha-current: 0.036;
+  --grid-far-alpha-current: 0.036;
+  --grid-mid-alpha-current: 0.05;
+}
+
+.ambient-grid[data-mode="paper"][data-strength="quiet"] {
+  --grid-far-alpha-current: 0.025;
+  --grid-mid-alpha-current: 0.038;
+}
+
+.ambient-grid[data-mode="lime"][data-strength="quiet"] {
+  --grid-far-alpha-current: 0.03;
+  --grid-mid-alpha-current: 0.043;
 }
 
 .ambient-grid[data-strength="active"] {
-  --grid-far-alpha-current: 0.04;
-  --grid-mid-alpha-current: 0.055;
+  --grid-far-alpha-current: 0.045;
+  --grid-mid-alpha-current: 0.065;
 }
 
 html[data-reader-theme="true"] .ambient-grid {
@@ -109,31 +137,41 @@ html[data-reader-theme="true"] .ambient-grid {
   position: absolute;
   inset: 0;
   background-position: center;
-  transform-origin: 50% 72%;
+  transform-origin: 50% 58%;
   will-change: transform;
 }
 
 .ambient-grid__far {
-  opacity: var(--grid-far-alpha-current);
+  opacity: calc(var(--grid-far-alpha-current) + var(--grid-transition-boost) * 0.032);
   background-image:
     linear-gradient(rgba(var(--grid-color-rgb), 1) 1px, transparent 1px),
     linear-gradient(90deg, rgba(var(--grid-color-rgb), 1) 1px, transparent 1px);
   background-size: var(--grid-far-size) var(--grid-far-size);
-  filter: blur(0.35px);
-  mask-image: radial-gradient(ellipse at center, #000 15%, rgba(0, 0, 0, 0.7) 58%, transparent 96%);
-  transform: translate3d(0, calc(var(--grid-depth) * -5px), 0)
-    scale(calc(1 + var(--grid-depth) * 0.018));
+  filter: blur(0.48px);
+  mask-image:
+    linear-gradient(90deg, transparent 0%, #000 9%, #000 91%, transparent 100%),
+    radial-gradient(ellipse at center, rgba(0, 0, 0, 0.38) 0%, #000 58%, transparent 96%);
+  mask-composite: intersect;
+  transform: perspective(1100px)
+    translate3d(var(--grid-far-x), var(--grid-far-y), 0)
+    rotateX(var(--grid-far-rotate))
+    scale(var(--grid-far-scale));
 }
 
 .ambient-grid__mid {
-  opacity: var(--grid-mid-alpha-current);
+  opacity: calc(var(--grid-mid-alpha-current) + var(--grid-transition-boost) * 0.038);
   background-image:
     linear-gradient(rgba(var(--grid-color-rgb), 1) 1px, transparent 1px),
     linear-gradient(90deg, rgba(var(--grid-color-rgb), 1) 1px, transparent 1px);
   background-size: var(--grid-mid-size) var(--grid-mid-size);
-  mask-image: radial-gradient(ellipse at center, #000 4%, rgba(0, 0, 0, 0.62) 48%, transparent 91%);
-  transform: translate3d(0, calc(var(--grid-depth) * 8px), 0)
-    scale(calc(1 + var(--grid-depth) * 0.035));
+  mask-image:
+    linear-gradient(90deg, transparent 0%, #000 7%, #000 93%, transparent 100%),
+    radial-gradient(ellipse at center, rgba(0, 0, 0, 0.26) 0%, #000 52%, transparent 93%);
+  mask-composite: intersect;
+  transform: perspective(920px)
+    translate3d(var(--grid-mid-x), var(--grid-mid-y), 0)
+    rotateX(var(--grid-mid-rotate))
+    scale(var(--grid-mid-scale));
 }
 
 .entry-curtain {
@@ -707,6 +745,8 @@ video {
   background: var(--paper);
   border: 1px solid #b8b4a9;
   box-shadow: 0 -1px 0 var(--lime);
+  transform-origin: center;
+  will-change: transform, opacity, clip-path, filter;
 }
 
 .process__steps li + li {
@@ -749,7 +789,7 @@ video {
 
 .about {
   color: var(--ink);
-  background: var(--paper);
+  background: rgba(240, 237, 229, 0.965);
 }
 
 .about__grid {
@@ -852,12 +892,31 @@ video {
 
 .contact-panel {
   color: var(--ink);
-  background: rgba(191, 255, 0, 0.975);
+  background: transparent;
+  isolation: isolate;
+  overflow-x: clip;
+  overflow-y: visible;
+  position: relative;
+}
+
+.contact-panel__wash {
+  background: rgba(191, 255, 0, 0.965);
+  clip-path: inset(0);
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: -100svh;
+  transform-origin: center;
+  z-index: 2;
 }
 
 .contact-panel__inner {
   min-height: 85svh;
   padding-block: clamp(90px, 12vw, 170px);
+  position: relative;
+  z-index: 4;
 }
 
 .contact-panel .eyebrow {
@@ -2270,15 +2329,15 @@ video {
   }
 
   .ambient-grid__far {
-    opacity: 0.012;
-    transform: none;
+    display: none;
   }
 
   .ambient-grid__mid {
-    opacity: min(var(--grid-mid-alpha-current), 0.026);
+    opacity: min(var(--grid-mid-alpha-current), 0.032);
     filter: none;
     mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.6), transparent 94%);
-    transform: translate3d(0, calc(var(--grid-depth) * 2px), 0);
+    transform: translate3d(var(--grid-mid-x), var(--grid-mid-y), 0)
+      scale(var(--grid-mid-scale));
   }
 
   .services .section-heading {
@@ -2359,6 +2418,14 @@ video {
   .contact-panel h2 {
     font-size: clamp(3rem, 14vw, 5.6rem);
     overflow-wrap: anywhere;
+  }
+
+  .contact-panel {
+    background: rgba(191, 255, 0, 0.975);
+  }
+
+  .contact-panel__wash {
+    display: none;
   }
 
   .contact-panel p,
@@ -2453,11 +2520,19 @@ video {
   }
 
   .ambient-grid__far {
-    opacity: 0.015;
+    opacity: 0.02;
   }
 
   .ambient-grid__mid {
-    opacity: 0.022;
+    opacity: 0.03;
+  }
+
+  .contact-panel {
+    background: rgba(191, 255, 0, 0.975);
+  }
+
+  .contact-panel__wash {
+    display: none;
   }
 
   .featured__preview-item {

@@ -1,0 +1,344 @@
+<script>
+  import { gsap, ScrollTrigger, motion } from "@/utils/motion";
+
+  const grid = document.querySelector<HTMLElement>("[data-ambient-grid]");
+  const media = gsap.matchMedia();
+
+  if (grid) {
+    media.add(
+      {
+        desktop: "(min-width: 721px) and (prefers-reduced-motion: no-preference)",
+        mobile: "(max-width: 720px) and (prefers-reduced-motion: no-preference)",
+        reduced: "(prefers-reduced-motion: reduce)"
+      },
+      (context) => {
+        const conditions = context.conditions as {
+          desktop?: boolean;
+          mobile?: boolean;
+          reduced?: boolean;
+        };
+
+        if (conditions.reduced) {
+          gsap.set(
+            [
+              "[data-home-motion] .section-heading",
+              "[data-process-step]",
+              ".manifesto__inner",
+              ".services .section-heading",
+              ".contact-panel__inner",
+              ".contact-panel__wash"
+            ],
+            {
+              clearProps: "all",
+              opacity: 1,
+              visibility: "visible",
+              clipPath: "none",
+              filter: "none",
+              scale: 1
+            }
+          );
+          return;
+        }
+
+        if (conditions.mobile) {
+          gsap.set(
+            [
+              "[data-home-motion] .section-heading",
+              "[data-process-step]",
+              ".manifesto__inner",
+              ".services .section-heading",
+              ".contact-panel__inner",
+              ".contact-panel__inner > *"
+            ],
+            {
+              clearProps: "transform,opacity,visibility,clip-path,filter",
+              opacity: 1,
+              visibility: "visible",
+              clipPath: "none",
+              filter: "none",
+              scale: 1
+            }
+          );
+          gsap.set(".contact-panel__wash", { display: "none" });
+          return;
+        }
+
+        const animations: gsap.core.Animation[] = [];
+        const process = document.querySelector<HTMLElement>('[data-home-motion="process"]');
+        const processHeading = process?.querySelector<HTMLElement>(".section-heading");
+        const processSteps = process
+          ? Array.from(process.querySelectorAll<HTMLElement>("[data-process-step]"))
+          : [];
+
+        if (process && processHeading && processSteps.length === 3) {
+          if (conditions.desktop) {
+            const processTimeline = gsap.timeline({
+              defaults: { ease: motion.easeStandard },
+              scrollTrigger: {
+                trigger: process,
+                start: "top 82%",
+                end: "bottom 24%",
+                scrub: motion.scrub,
+                invalidateOnRefresh: true
+              }
+            });
+
+            processTimeline
+              .fromTo(
+                processHeading,
+                { autoAlpha: 0, scale: 0.76, filter: "blur(3px)", transformOrigin: "center" },
+                { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 2.6 },
+                0
+              )
+              .to(
+                grid,
+                {
+                  "--grid-far-scale": 1.035,
+                  "--grid-mid-scale": 1.11,
+                  "--grid-transition-boost": 0.55,
+                  duration: 2.6
+                },
+                0
+              )
+              .fromTo(
+                processSteps[0],
+                { autoAlpha: 0, clipPath: "inset(0 48% 0 48%)", scale: 0.9 },
+                { autoAlpha: 1, clipPath: "inset(0 0% 0 0%)", scale: 1, duration: 2.8 },
+                2.4
+              )
+              .to(
+                grid,
+                {
+                  "--grid-far-x": "-12px",
+                  "--grid-mid-x": "18px",
+                  "--grid-transition-boost": 0.25,
+                  duration: 2.8
+                },
+                2.4
+              )
+              .to(processSteps[0], { scale: 0.92, autoAlpha: 0.78, duration: 1.7 }, 5)
+              .fromTo(
+                processSteps[1],
+                {
+                  autoAlpha: 0,
+                  clipPath: "inset(42% 44% 42% 44%)",
+                  scale: 0.82,
+                  filter: "blur(2px)"
+                },
+                {
+                  autoAlpha: 1,
+                  clipPath: "inset(0% 0% 0% 0%)",
+                  scale: 1,
+                  filter: "blur(0px)",
+                  duration: 3
+                },
+                5.2
+              )
+              .to(
+                grid,
+                {
+                  "--grid-far-scale": 0.98,
+                  "--grid-mid-scale": 1.14,
+                  "--grid-mid-y": "-14px",
+                  duration: 3
+                },
+                5.2
+              )
+              .to(processSteps[1], { scale: 1.07, duration: 1.2 }, 8)
+              .to(
+                processSteps[1],
+                { scale: 0.82, autoAlpha: 0.42, filter: "blur(2px)", duration: 1.8 },
+                9.1
+              )
+              .fromTo(
+                processSteps[2],
+                { autoAlpha: 0, scale: 0.72, filter: "blur(3px)" },
+                { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 2.8 },
+                9.3
+              )
+              .to(
+                grid,
+                {
+                  "--grid-far-scale": 1,
+                  "--grid-far-x": "0px",
+                  "--grid-mid-scale": 1,
+                  "--grid-mid-x": "0px",
+                  "--grid-mid-y": "0px",
+                  "--grid-transition-boost": 0,
+                  duration: 2.8
+                },
+                9.3
+              );
+            animations.push(processTimeline);
+          } else {
+            [processHeading, ...processSteps].forEach((element) => {
+              const tween = gsap.fromTo(
+                element,
+                { autoAlpha: 0, scale: 0.92, clipPath: "inset(0 10% 0 10%)" },
+                {
+                  autoAlpha: 1,
+                  scale: 1,
+                  clipPath: "inset(0 0% 0 0%)",
+                  duration: motion.normal,
+                  ease: motion.easeEnter,
+                  scrollTrigger: { trigger: element, start: "top 90%", once: true }
+                }
+              );
+              animations.push(tween);
+            });
+          }
+        }
+
+        const manifesto = document.querySelector<HTMLElement>('[data-home-motion="manifesto"]');
+        const manifestoCopy = manifesto?.querySelector<HTMLElement>(".manifesto__inner");
+        if (manifesto && manifestoCopy) {
+          const manifestoTimeline = gsap.timeline({
+            scrollTrigger: {
+              trigger: manifesto,
+              start: "top 84%",
+              end: conditions.desktop ? "top 28%" : "top 58%",
+              scrub: conditions.desktop ? motion.scrub : false,
+              once: !conditions.desktop
+            }
+          });
+          manifestoTimeline.fromTo(
+            manifestoCopy,
+            { autoAlpha: 0, scale: conditions.desktop ? 0.72 : 0.9, filter: "blur(3px)" },
+            {
+              autoAlpha: 1,
+              scale: 1,
+              filter: "blur(0px)",
+              duration: motion.slow,
+              ease: motion.easeStandard
+            }
+          );
+          animations.push(manifestoTimeline);
+        }
+
+        const services = document.querySelector<HTMLElement>('[data-home-motion="services"]');
+        const servicesHeading = services?.querySelector<HTMLElement>(".section-heading");
+        if (services && servicesHeading) {
+          const servicesTimeline = gsap.timeline({
+            scrollTrigger: {
+              trigger: services,
+              start: "top 86%",
+              end: conditions.desktop ? "top 32%" : "top 60%",
+              scrub: conditions.desktop ? motion.scrub : false,
+              once: !conditions.desktop
+            }
+          });
+          servicesTimeline
+            .fromTo(
+              servicesHeading,
+              {
+                autoAlpha: 0,
+                scale: conditions.desktop ? 0.7 : 0.9,
+                yPercent: conditions.desktop ? 10 : 4,
+                filter: "blur(3px)",
+                transformOrigin: "center bottom"
+              },
+              {
+                autoAlpha: 1,
+                scale: 1,
+                yPercent: 0,
+                filter: "blur(0px)",
+                duration: motion.slow,
+                ease: motion.easeStandard
+              }
+            )
+            .to(
+              grid,
+              {
+                "--grid-far-scale": 0.96,
+                "--grid-mid-scale": 0.9,
+                "--grid-transition-boost": 0.24,
+                duration: motion.slow
+              },
+              0
+            );
+          animations.push(servicesTimeline);
+        }
+
+        const contact = document.querySelector<HTMLElement>('[data-home-motion="contact"]');
+        const wash = contact?.querySelector<HTMLElement>(".contact-panel__wash");
+        const contactInner = contact?.querySelector<HTMLElement>(".contact-panel__inner");
+        const statement = contact?.querySelector<HTMLElement>("h2");
+        const contactRest = contact
+          ? Array.from(contact.querySelectorAll<HTMLElement>(".contact-panel__inner > :not(h2)"))
+          : [];
+
+        if (contact && wash && contactInner && statement) {
+          const contactTimeline = gsap.timeline({
+            defaults: { ease: motion.easeStandard },
+            scrollTrigger: {
+              trigger: contact,
+              start: "top 120%",
+              end: conditions.desktop ? "top 14%" : "top 52%",
+              scrub: conditions.desktop ? motion.scrub : false,
+              once: !conditions.desktop
+            }
+          });
+
+          contactTimeline
+            .fromTo(
+              wash,
+              { clipPath: "inset(46% 47% 46% 47%)" },
+              { clipPath: "inset(0% 0% 0% 0%)", duration: 3.2 }
+            )
+            .to(
+              grid,
+              {
+                "--grid-far-scale": 1.04,
+                "--grid-mid-scale": 1.16,
+                "--grid-transition-boost": 0.9,
+                duration: 2.2
+              },
+              0
+            )
+            .fromTo(
+              statement,
+              { autoAlpha: 0, filter: "blur(4px)", scale: 0.94 },
+              { autoAlpha: 0.56, filter: "blur(2px)", scale: 0.98, duration: 1.4 },
+              1.7
+            )
+            .to(
+              statement,
+              { autoAlpha: 1, filter: "blur(0px)", scale: 1, duration: 1.4 },
+              2.7
+            )
+            .fromTo(
+              contactRest,
+              { autoAlpha: 0, filter: "blur(2px)" },
+              { autoAlpha: 1, filter: "blur(0px)", duration: 1.5, stagger: 0.08 },
+              3
+            )
+            .to(
+              grid,
+              {
+                "--grid-far-scale": 1,
+                "--grid-mid-scale": 1,
+                "--grid-transition-boost": 0.08,
+                duration: 1.6
+              },
+              3.8
+            );
+          animations.push(contactTimeline);
+        }
+
+        const refresh = () => ScrollTrigger.refresh();
+        const refreshTimer = window.setTimeout(refresh, 100);
+        const onResize = () => refresh();
+        window.addEventListener("resize", onResize, { passive: true });
+
+        return () => {
+          window.clearTimeout(refreshTimer);
+          window.removeEventListener("resize", onResize);
+          animations.forEach((animation) => {
+            animation.scrollTrigger?.kill();
+            animation.kill();
+          });
+        };
+      }
+    );
+  }
+</script>

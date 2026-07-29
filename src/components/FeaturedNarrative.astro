@@ -156,16 +156,6 @@ const works = [
           />
         </a>
 
-        <span class="featured-manga-reaction" aria-hidden="true" data-manga-reaction>
-          <img
-            src="/media/ui/manga-reaction-transparent.webp"
-            width="1254"
-            height="1254"
-            alt=""
-            loading="lazy"
-            decoding="async"
-          />
-        </span>
       </div>
 
       <div class="featured-narrative__progress" aria-hidden="true">
@@ -176,14 +166,11 @@ const works = [
 </section>
 
 <script>
-  import gsap from "gsap";
-  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  import { gsap, ScrollTrigger, motion } from "@/utils/motion";
 
   const root = document.querySelector<HTMLElement>("[data-featured-narrative]");
 
   if (root) {
-    gsap.registerPlugin(ScrollTrigger);
-
     const works = [
       { number: "01", title: "偷灵魂的人", href: "/fiction/soul-thief/" },
       { number: "02", title: "绘画", href: "/artworks/" },
@@ -244,7 +231,6 @@ const works = [
           const artImage = art?.querySelector("img");
           const videoImage = video?.querySelector("img");
           const gameImage = game?.querySelector("img");
-          const manga = root.querySelector<HTMLElement>("[data-manga-reaction]");
           const ambientGrid = document.querySelector<HTMLElement>("[data-ambient-grid]");
 
           if (
@@ -256,7 +242,6 @@ const works = [
             !artImage ||
             !videoImage ||
             !gameImage ||
-            !manga ||
             !ambientGrid ||
             scenes.length !== 3
           ) {
@@ -271,26 +256,49 @@ const works = [
           });
           gsap.set(scenes.slice(1), { autoAlpha: 0 });
           gsap.set([art, video, game], { autoAlpha: 0 });
-          gsap.set(art, { clipPath: "inset(0 94% 0 0)" });
-          gsap.set(video, { clipPath: "inset(0 34% 0 34%)" });
-          gsap.set(game, { clipPath: "inset(72% 0 0 0)" });
-          gsap.set(artImage, { scale: 1.055, xPercent: -2 });
-          gsap.set(videoImage, { scale: 1.055 });
-          gsap.set(gameImage, { scale: 1.035 });
-          gsap.set(manga, { autoAlpha: 0, yPercent: 52, rotate: 4, scale: 0.76 });
-          gsap.set(ambientGrid, { "--grid-depth": 0 });
+          gsap.set(art, {
+            clipPath: "inset(8% 94% 8% 0)",
+            transformOrigin: "left center"
+          });
+          gsap.set(video, {
+            clipPath: "inset(14% 43% 14% 43%)",
+            transformOrigin: "center center"
+          });
+          gsap.set(game, {
+            clipPath:
+              "polygon(58% 65%, 61% 68%, 65% 68%, 63% 72%, 65% 76%, 60% 75%, 57% 79%, 54% 75%, 49% 76%, 52% 71%, 49% 68%, 54% 68%)"
+          });
+          gsap.set(artImage, {
+            scale: 1.12,
+            xPercent: 0,
+            objectPosition: "0% 50%",
+            transformOrigin: "left center"
+          });
+          gsap.set(videoImage, { autoAlpha: 0, scale: 1.08 });
+          gsap.set(gameImage, { scale: 1.14, xPercent: 4, yPercent: 3 });
+          gsap.set(ambientGrid, {
+            "--grid-far-x": "0px",
+            "--grid-far-y": "0px",
+            "--grid-far-scale": 1,
+            "--grid-far-rotate": "0deg",
+            "--grid-mid-x": "0px",
+            "--grid-mid-y": "0px",
+            "--grid-mid-scale": 1,
+            "--grid-mid-rotate": "0deg",
+            "--grid-transition-boost": 0
+          });
 
           const timeline = gsap.timeline({
-            defaults: { ease: "none" },
+            defaults: { ease: motion.easeStandard },
             scrollTrigger: {
               trigger: track,
               start: "top top",
               end: "bottom bottom",
-              scrub: 0.45,
+              scrub: motion.scrub,
               invalidateOnRefresh: true,
               onUpdate: (self) => {
                 const value = self.progress;
-                const index = value < 0.38 ? 0 : value < 0.57 ? 1 : value < 0.74 ? 2 : 3;
+                const index = value < 0.34 ? 0 : value < 0.55 ? 1 : value < 0.76 ? 2 : 3;
                 setActive(index);
                 if (progress) progress.style.transform = `scaleX(${value})`;
               }
@@ -298,48 +306,240 @@ const works = [
           });
 
           timeline
-            .to(scenes[0], { filter: "grayscale(.92) sepia(0) hue-rotate(0deg) blur(0px)", scale: 1, duration: 7 }, 0)
-            .to(ambientGrid, { "--grid-depth": 0.22, duration: 7 }, 0)
-            .to(scenes[0], { autoAlpha: 0, scale: 0.92, duration: 4 }, 9)
+            .to(
+              scenes[0],
+              {
+                filter: "grayscale(.92) sepia(0) hue-rotate(0deg) blur(0px)",
+                scale: 1,
+                duration: 6
+              },
+              0
+            )
+            .to(
+              ambientGrid,
+              {
+                "--grid-far-scale": 1.025,
+                "--grid-far-y": "-8px",
+                "--grid-mid-scale": 1.06,
+                "--grid-mid-y": "12px",
+                duration: 7
+              },
+              0
+            )
+            .to(scenes[0], { autoAlpha: 0, scale: 0.84, filter: "blur(1px)", duration: 4 }, 7)
             .fromTo(
               scenes[1],
-              { autoAlpha: 0, yPercent: 16, filter: "brightness(.72)" },
-              { autoAlpha: 1, yPercent: 0, filter: "brightness(1)", duration: 5 },
-              11
+              { autoAlpha: 0, scale: 0.78, filter: "brightness(.72) blur(2px)" },
+              { autoAlpha: 1, scale: 1, filter: "brightness(1) blur(0px)", duration: 5 },
+              10
             )
-            .to(ambientGrid, { "--grid-depth": 0.58, duration: 7 }, 11)
-            .to(scenes[1], { autoAlpha: 0, filter: "brightness(.48)", duration: 4 }, 19)
+            .to(
+              ambientGrid,
+              {
+                "--grid-far-scale": 0.98,
+                "--grid-far-y": "9px",
+                "--grid-mid-scale": 1.11,
+                "--grid-mid-y": "-16px",
+                duration: 7
+              },
+              10
+            )
+            .to(scenes[1], { autoAlpha: 0, scale: 0.8, filter: "brightness(.48) blur(2px)", duration: 4 }, 17)
             .fromTo(
               scenes[2],
-              { autoAlpha: 0, scale: 1.04 },
-              { autoAlpha: 1, scale: 1, duration: 4 },
-              21
+              { autoAlpha: 0, scale: 0.82, filter: "blur(2px)" },
+              { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 4 },
+              19
             )
-            .to(ambientGrid, { "--grid-depth": -0.22, duration: 9 }, 21)
-            .to(scenes[2], { autoAlpha: 0.08, scale: 0.54, yPercent: -38, filter: "blur(2px)", duration: 7 }, 28)
-            .to(novel, { autoAlpha: 0, scale: 0.93, duration: 3 }, 34)
-            .to(ambientGrid, { "--grid-depth": 0.9, duration: 5 }, 34)
-            .to(art, { autoAlpha: 1, clipPath: "inset(0 0% 0 0)", duration: 8 }, 35)
-            .to(artImage, { scale: 1, xPercent: 0, duration: 10 }, 35)
-            .to(art, { clipPath: "inset(12% 18% 12% 18%)", scale: 0.9, autoAlpha: 0.2, duration: 6 }, 51)
-            .to(ambientGrid, { "--grid-depth": 0.3, duration: 7 }, 51)
-            .to(video, { autoAlpha: 1, clipPath: "inset(0 0% 0 0%)", duration: 7 }, 52)
-            .to(videoImage, { scale: 1, duration: 11 }, 52)
-            .to(video, { filter: "brightness(.5)", scale: 0.96, duration: 5 }, 68)
-            .to(ambientGrid, { "--grid-depth": 0.08, duration: 7 }, 68)
-            .to(game, { autoAlpha: 1, clipPath: "inset(0% 0 0 0)", duration: 8 }, 69)
-            .to(gameImage, { scale: 1, duration: 15 }, 69)
-            .to(video, { autoAlpha: 0, duration: 4 }, 75)
-            .to(game, { scale: 0.91, clipPath: "inset(8% 8% 8% 8%)", duration: 7 }, 91)
-            .to(ambientGrid, { "--grid-depth": 0, duration: 7 }, 91)
-            .fromTo(
-              manga,
-              { autoAlpha: 0, yPercent: 52, rotate: 4, scale: 0.76 },
-              { autoAlpha: 1, yPercent: 0, rotate: 0, scale: 1.045, duration: 3 },
-              93
+            .to(
+              scenes[2],
+              {
+                autoAlpha: 0.32,
+                scale: 0.61,
+                xPercent: 10,
+                yPercent: -8,
+                filter: "blur(2.5px)",
+                duration: 7,
+                ease: motion.easeExit
+              },
+              25
             )
-            .to(manga, { scale: 1, duration: 2 }, 96)
-            .to(manga, { autoAlpha: 0, yPercent: 18, duration: 2 }, 98);
+            .to(
+              ambientGrid,
+              {
+                "--grid-far-scale": 0.94,
+                "--grid-far-x": "-18px",
+                "--grid-far-y": "14px",
+                "--grid-mid-scale": 1.18,
+                "--grid-mid-x": "26px",
+                "--grid-mid-y": "-22px",
+                "--grid-mid-rotate": "2deg",
+                "--grid-transition-boost": 1,
+                duration: 8
+              },
+              24
+            )
+            .to(novel, { autoAlpha: 0, scale: 0.84, duration: 3 }, 31)
+            .to(art, { autoAlpha: 1, duration: 0.6 }, 31)
+            .to(
+              art,
+              {
+                clipPath: "inset(5% 0% 5% 0%)",
+                duration: 11,
+                ease: motion.easeStandard
+              },
+              31
+            )
+            .to(
+              artImage,
+              {
+                scale: 1,
+                xPercent: 0,
+                objectPosition: "50% 50%",
+                duration: 12,
+                ease: motion.easeStandard
+              },
+              31
+            )
+            .to(
+              ambientGrid,
+              {
+                "--grid-far-scale": 1,
+                "--grid-far-x": "0px",
+                "--grid-far-y": "0px",
+                "--grid-mid-scale": 1.03,
+                "--grid-mid-x": "0px",
+                "--grid-mid-y": "0px",
+                "--grid-mid-rotate": "0deg",
+                "--grid-transition-boost": 0.12,
+                duration: 9
+              },
+              34
+            )
+            .to(
+              art,
+              {
+                clipPath: "inset(18% 43% 18% 43%)",
+                scale: 0.78,
+                duration: 8,
+                ease: motion.easeExit
+              },
+              47
+            )
+            .to(
+              ambientGrid,
+              {
+                "--grid-far-scale": 0.97,
+                "--grid-far-x": "12px",
+                "--grid-mid-scale": 1.15,
+                "--grid-mid-x": "-24px",
+                "--grid-transition-boost": 0.9,
+                duration: 8
+              },
+              47
+            )
+            .to(video, { autoAlpha: 1, duration: 0.5 }, 50)
+            .to(
+              video,
+              {
+                clipPath: "inset(10% 31% 10% 31%)",
+                duration: 5,
+                ease: motion.easeEnter
+              },
+              50
+            )
+            .to(art, { autoAlpha: 0, duration: 3 }, 52)
+            .to(
+              video,
+              {
+                clipPath: "inset(5% 6% 5% 6%)",
+                duration: 9,
+                ease: motion.easeStandard
+              },
+              55
+            )
+            .to(videoImage, { autoAlpha: 1, scale: 1, duration: 7 }, 56)
+            .to(
+              ambientGrid,
+              {
+                "--grid-far-scale": 1,
+                "--grid-far-x": "0px",
+                "--grid-mid-scale": 1.02,
+                "--grid-mid-x": "0px",
+                "--grid-transition-boost": 0.1,
+                duration: 9
+              },
+              55
+            )
+            .to(video, { filter: "brightness(.62)", duration: 5 }, 69)
+            .to(game, { autoAlpha: 1, duration: 0.4 }, 69)
+            .to(
+              game,
+              {
+                clipPath:
+                  "polygon(-5% -5%, 50% -5%, 105% -5%, 105% 25%, 105% 50%, 105% 105%, 50% 105%, -5% 105%, -5% 75%, -5% 50%, -5% 25%, -5% -5%)",
+                duration: 10,
+                ease: motion.easeStandard
+              },
+              69
+            )
+            .to(video, { autoAlpha: 0, scale: 0.9, duration: 5 }, 73)
+            .to(
+              ambientGrid,
+              {
+                "--grid-far-scale": 0.96,
+                "--grid-far-y": "14px",
+                "--grid-mid-scale": 1.12,
+                "--grid-mid-y": "-18px",
+                "--grid-transition-boost": 0.74,
+                duration: 9
+              },
+              69
+            )
+            .to(
+              gameImage,
+              {
+                scale: 1,
+                xPercent: 0,
+                yPercent: 0,
+                duration: 14,
+                ease: motion.easeStandard
+              },
+              76
+            )
+            .to(
+              ambientGrid,
+              {
+                "--grid-far-scale": 1,
+                "--grid-far-y": "0px",
+                "--grid-mid-scale": 1,
+                "--grid-mid-y": "0px",
+                "--grid-transition-boost": 0,
+                duration: 10
+              },
+              80
+            )
+            .to(
+              game,
+              {
+                scale: 0.84,
+                autoAlpha: 0.48,
+                duration: 8,
+                ease: motion.easeExit
+              },
+              94
+            )
+            .to(
+              ambientGrid,
+              {
+                "--grid-far-scale": 0.92,
+                "--grid-mid-scale": 1.17,
+                "--grid-mid-rotate": "2deg",
+                "--grid-transition-boost": 1,
+                duration: 8
+              },
+              94
+            );
 
           const refresh = () => ScrollTrigger.refresh();
           const timer = window.setTimeout(refresh, 80);
@@ -392,9 +592,11 @@ const works = [
 <style lang="scss">
   .featured-narrative {
     --stage-inline: min(78vw, 1320px);
-    background: rgba(17, 17, 17, 0.88);
+    background: rgba(17, 17, 17, 0.82);
     color: var(--white);
     overflow: clip;
+    position: relative;
+    z-index: 2;
   }
 
   .featured-narrative__heading {
@@ -414,6 +616,7 @@ const works = [
     overflow: clip;
     position: sticky;
     top: 0;
+    z-index: 2;
   }
 
   .featured-narrative__canvas {
@@ -432,6 +635,7 @@ const works = [
     position: absolute;
     text-decoration: none;
     transform-origin: center;
+    z-index: 3;
   }
 
   .featured-frame:focus-visible {
@@ -445,6 +649,7 @@ const works = [
       linear-gradient(90deg, rgba(17, 17, 17, 0.25), rgba(17, 17, 17, 0)),
       transparent;
     padding: clamp(2rem, 6vw, 7rem);
+    z-index: 4;
   }
 
   .featured-novel__meta {
@@ -457,6 +662,7 @@ const works = [
     text-transform: uppercase;
     top: 0;
     width: 100%;
+    z-index: 4;
   }
 
   .featured-novel__scenes {
@@ -522,7 +728,8 @@ const works = [
   }
 
   .featured-frame--art img {
-    object-position: center;
+    object-fit: cover;
+    object-position: left center;
   }
 
   .featured-frame--video img {
@@ -545,7 +752,7 @@ const works = [
     top: 50%;
     transform: translateY(-50%);
     width: clamp(10.75rem, 15vw, 14.5rem);
-    z-index: 4;
+    z-index: 5;
   }
 
   .featured-index ol {
@@ -620,27 +827,6 @@ const works = [
     height: 100%;
     transform: scaleX(0);
     transform-origin: left center;
-    width: 100%;
-  }
-
-  .featured-manga-reaction {
-    align-items: center;
-    background: var(--lime);
-    bottom: -1.5rem;
-    clip-path: circle(48% at 50% 50%);
-    display: grid;
-    height: clamp(10rem, 18vw, 18rem);
-    pointer-events: none;
-    position: absolute;
-    right: -0.5rem;
-    width: clamp(10rem, 18vw, 18rem);
-    z-index: 6;
-  }
-
-  .featured-manga-reaction img {
-    display: block;
-    height: 100%;
-    object-fit: contain;
     width: 100%;
   }
 
@@ -841,8 +1027,7 @@ const works = [
       outline-offset: 3px;
     }
 
-    .featured-narrative__progress,
-    .featured-manga-reaction {
+    .featured-narrative__progress {
       display: none;
     }
   }
@@ -898,8 +1083,5 @@ const works = [
       filter: none !important;
     }
 
-    .featured-manga-reaction {
-      display: none;
-    }
   }
 </style>

@@ -2,14 +2,8 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import SectionHeading from "@/components/SectionHeading.astro";
 import FeaturedNarrative from "@/components/FeaturedNarrative.astro";
+import HomeMotion from "@/components/HomeMotion.astro";
 import profile from "@/content/profile.json";
-
-const chapters = [
-  { number: "01", eyebrow: "FICTION", title: "小说", href: "/fiction/" },
-  { number: "02", eyebrow: "ARTWORK", title: "画作", href: "/artworks/" },
-  { number: "03", eyebrow: "MOVING IMAGE", title: "影像", href: "/videos/" },
-  { number: "04", eyebrow: "GAMES", title: "游戏", href: "/games/" }
-];
 ---
 
 <BaseLayout>
@@ -64,39 +58,37 @@ const chapters = [
 
   <FeaturedNarrative />
 
-  <section class="chapters section" data-grid-mode="dark" data-grid-strength="quiet">
-    <div class="shell chapter-list">
-      {chapters.map((chapter) => (
-        <a class="chapter-link" href={chapter.href} data-chapter-link data-reveal>
-          <span class="chapter-link__number">{chapter.number}</span>
-          <span class="chapter-link__eyebrow">{chapter.eyebrow}</span>
-          <strong>{chapter.title}</strong>
-          <span class="chapter-link__arrow" aria-hidden="true">↗</span>
-        </a>
-      ))}
-    </div>
-  </section>
-
-  <section class="process section shell" data-grid-mode="dark" data-grid-strength="quiet">
+  <section
+    class="process section shell"
+    data-grid-mode="dark"
+    data-grid-strength="quiet"
+    data-home-motion="process"
+  >
     <SectionHeading index="02" eyebrow="FROM IDEA TO FORM" title="让想法第一次拥有形状" />
 
     <ol class="process__steps">
-      <li data-reveal>
+      <li data-process-step="clip">
         <span>01</span>
         <strong>一句模糊的话</strong>
       </li>
-      <li data-reveal>
+      <li data-process-step="aperture">
         <span>02</span>
         <strong>建立视觉与结构</strong>
       </li>
-      <li data-reveal>
+      <li data-process-step="depth">
         <span>03</span>
         <strong>做成可运行原型</strong>
       </li>
     </ol>
   </section>
 
-  <section class="manifesto" aria-label="创作方式" data-grid-mode="lime" data-grid-strength="quiet">
+  <section
+    class="manifesto"
+    aria-label="创作方式"
+    data-grid-mode="lime"
+    data-grid-strength="quiet"
+    data-home-motion="manifesto"
+  >
     <div class="shell manifesto__inner">
       <p>用最低的成本，一两个晚上，先让它存在，再把它变好。</p>
     </div>
@@ -124,7 +116,12 @@ const chapters = [
     </div>
   </section>
 
-  <section class="services section shell" data-grid-mode="dark" data-grid-strength="quiet">
+  <section
+    class="services section shell"
+    data-grid-mode="dark"
+    data-grid-strength="quiet"
+    data-home-motion="services"
+  >
     <SectionHeading index="04" eyebrow="WHAT I CAN HELP WITH" title="我能帮你做什么？" />
     <ul class="services__list">
       {profile.services.map((service, index) => (
@@ -136,7 +133,14 @@ const chapters = [
     </ul>
   </section>
 
-  <section class="contact-panel" id="contact" data-grid-mode="lime" data-grid-strength="quiet">
+  <section
+    class="contact-panel"
+    id="contact"
+    data-grid-mode="lime"
+    data-grid-strength="quiet"
+    data-home-motion="contact"
+  >
+    <span class="contact-panel__wash" aria-hidden="true"></span>
     <div class="shell contact-panel__inner">
       <span class="eyebrow">CONTACT / START WITH ONE SENTENCE</span>
       <h2>我会认真倾听你的一切想法，并努力把它变成现实。</h2>
@@ -164,4 +168,5 @@ const chapters = [
     </div>
   </section>
 
+  <HomeMotion />
 </BaseLayout>

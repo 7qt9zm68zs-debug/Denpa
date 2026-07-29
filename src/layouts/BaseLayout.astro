@@ -45,7 +45,6 @@ const isHome = Astro.url.pathname === "/";
           <link rel="preload" as="image" href="/media/artworks/art-02.webp" />
           <link rel="preload" as="image" href="/media/videos/my-empty-shell/poster.webp" />
           <link rel="preload" as="image" href="/media/games/endless/featured.webp" />
-          <link rel="preload" as="image" href="/media/ui/manga-reaction-transparent.webp" />
         </>
       )
     }
@@ -73,10 +72,10 @@ const isHome = Astro.url.pathname === "/";
     <Footer />
     <script>
       import Lenis from "lenis";
-      import gsap from "gsap";
-      import { ScrollTrigger } from "gsap/ScrollTrigger";
+      import { gsap, ScrollTrigger } from "@/utils/motion";
 
       const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const desktop = window.matchMedia("(min-width: 721px)").matches;
 
       if (reduceMotion) {
         document.querySelectorAll<HTMLVideoElement>("video[autoplay]").forEach((video) => {
@@ -86,34 +85,41 @@ const isHome = Astro.url.pathname === "/";
       }
 
       if (!reduceMotion) {
-        gsap.registerPlugin(ScrollTrigger);
-        const lenis = new Lenis({
-          duration: 1.05,
-          smoothWheel: true,
-          wheelMultiplier: 0.9
-        });
+        if (desktop) {
+          const lenis = new Lenis({
+            duration: 1.05,
+            smoothWheel: true,
+            wheelMultiplier: 0.9
+          });
 
-        lenis.on("scroll", ScrollTrigger.update);
-        gsap.ticker.add((time) => lenis.raf(time * 1000));
-        gsap.ticker.lagSmoothing(0);
+          lenis.on("scroll", ScrollTrigger.update);
+          gsap.ticker.add((time) => lenis.raf(time * 1000));
+          gsap.ticker.lagSmoothing(0);
 
-        gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((element) => {
-          gsap.fromTo(
-            element,
-            { y: 36, opacity: 0 },
-            {
-              y: 0,
-              opacity: 1,
-              duration: 0.9,
-              ease: "power3.out",
-              scrollTrigger: {
-                trigger: element,
-                start: "top 88%",
-                once: true
+          gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((element) => {
+            gsap.fromTo(
+              element,
+              { y: 36, opacity: 0 },
+              {
+                y: 0,
+                opacity: 1,
+                duration: 0.9,
+                ease: "power3.out",
+                scrollTrigger: {
+                  trigger: element,
+                  start: "top 88%",
+                  once: true
+                }
               }
-            }
-          );
-        });
+            );
+          });
+        } else {
+          gsap.set("[data-reveal]", {
+            clearProps: "transform,opacity,visibility",
+            opacity: 1,
+            visibility: "visible"
+          });
+        }
 
         const intro = gsap.timeline({ defaults: { ease: "power3.inOut" } });
         intro
@@ -141,8 +147,6 @@ const isHome = Astro.url.pathname === "/";
               "-=0.28"
             );
         }
-
-        const desktop = window.matchMedia("(min-width: 721px)").matches;
 
         if (desktop && document.querySelector(".hero__sticky")) {
           const heroTimeline = gsap.timeline();
