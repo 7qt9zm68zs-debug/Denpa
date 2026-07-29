@@ -1,0 +1,46 @@
+---
+interface Work {
+  number: string;
+  title: string;
+  type: string;
+  href: string;
+}
+
+interface Props {
+  works: Work[];
+}
+
+const { works } = Astro.props;
+---
+
+<nav class="featured-index" aria-label="节选作品索引">
+  <ol>
+    {
+      works.map((work, index) => (
+        <li>
+          <a
+            class:list={["featured-index__link", { "is-active": index === 0 }]}
+            href={work.href}
+            data-feature-index-link={index}
+            aria-current={index === 0 ? "true" : undefined}
+          >
+            <span>{work.number}</span>
+            <strong>{work.title}</strong>
+            <em>{work.type}</em>
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<a
+  class="featured-mobile-index"
+  href={works[0].href}
+  data-feature-mobile-index
+  aria-label={`打开${works[0].title}`}
+>
+  <span data-feature-mobile-count>01 / 04</span>
+  <strong data-feature-mobile-title>{works[0].type}</strong>
+  <span aria-hidden="true">↗</span>
+</a>

@@ -1,0 +1,614 @@
+.featured-experience {
+  position: relative;
+  min-height: 100svh;
+  overflow: clip;
+  color: var(--white);
+  background: var(--black);
+  z-index: 2;
+}
+
+.featured-stage {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--black);
+  perspective: 1200px;
+  isolation: isolate;
+}
+
+.featured-world {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.featured-scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--black);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.featured-scene--drawing,
+.featured-scene--film,
+.featured-scene--game {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.featured-novel__scene:not(:first-child),
+.portal-sentence,
+.film-countdown,
+.film-screen,
+.featured-scene--game .game-camera,
+.featured-transition-copy {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.featured-stage__heading {
+  position: absolute;
+  z-index: 6;
+  top: clamp(1.2rem, 3vw, 3rem);
+  left: clamp(1rem, 3vw, 3.5rem);
+  display: grid;
+  grid-template-columns: 2rem auto;
+  gap: 0.25rem 0.75rem;
+  color: rgba(245, 244, 239, 0.7);
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
+  pointer-events: none;
+}
+
+.featured-stage__heading h2 {
+  grid-column: 1 / -1;
+  margin: 0.5rem 0 0;
+  color: var(--white);
+  font-size: clamp(1.1rem, 2vw, 2rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.featured-novel__meta {
+  position: absolute;
+  z-index: 2;
+  top: clamp(1.2rem, 3vw, 3rem);
+  right: clamp(1rem, 3vw, 3.5rem);
+  display: flex;
+  gap: 1.5rem;
+  color: rgba(245, 244, 239, 0.56);
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
+}
+
+.featured-novel__world {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: clamp(5rem, 9vw, 9rem) clamp(1.5rem, 10vw, 10rem);
+  transform-style: preserve-3d;
+}
+
+.featured-novel__scene,
+.portal-sentence {
+  grid-area: 1 / 1;
+  width: min(64rem, 72vw);
+  margin: 0;
+  font-family: var(--serif);
+  transform-origin: center;
+}
+
+.featured-novel__scene p {
+  margin: 0;
+  font-size: clamp(1.7rem, 3.35vw, 4.7rem);
+  line-height: 1.36;
+  text-wrap: pretty;
+}
+
+.featured-novel__scene p + p {
+  margin-top: 0.8em;
+}
+
+.portal-sentence,
+.featured-transition-copy {
+  color: var(--white);
+  font-size: clamp(2.2rem, 6.2vw, 7.2rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.055em;
+  white-space: nowrap;
+}
+
+.portal-dot {
+  display: inline-block;
+  color: var(--lime);
+  transform-origin: center;
+}
+
+.featured-scene--drawing {
+  display: grid;
+  place-items: center;
+  clip-path: circle(0 at 50% 50%);
+  background: #f4f2ed;
+}
+
+.drawing-camera {
+  position: relative;
+  width: min(92vw, 1500px);
+  aspect-ratio: 1672 / 941;
+  margin: 0;
+  overflow: hidden;
+  background: #fff;
+  transform-origin: 66% 48%;
+}
+
+.drawing-layer {
+  --brush-cut: 104%;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.drawing-layer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform-origin: center;
+}
+
+.drawing-layer--draft,
+.drawing-layer--final {
+  clip-path: polygon(
+    var(--brush-cut) 0%,
+    100% 0%,
+    100% 100%,
+    calc(var(--brush-cut) + 1.4%) 100%,
+    calc(var(--brush-cut) - 0.8%) 88%,
+    calc(var(--brush-cut) + 1.1%) 74%,
+    calc(var(--brush-cut) - 0.6%) 57%,
+    calc(var(--brush-cut) + 1.3%) 39%,
+    calc(var(--brush-cut) - 0.7%) 20%
+  );
+}
+
+.drawing-brush-edge {
+  position: absolute;
+  top: -3%;
+  bottom: -3%;
+  left: var(--brush-cut);
+  width: clamp(20px, 2.8vw, 48px);
+  opacity: 0.72;
+  background:
+    repeating-linear-gradient(
+      171deg,
+      rgba(17, 17, 17, 0.52) 0 2px,
+      transparent 2px 6px
+    );
+  filter: blur(0.5px);
+  transform: translateX(-48%);
+  mask-image: linear-gradient(90deg, transparent, #000 24%, #000 68%, transparent);
+}
+
+.featured-scene--film,
+.featured-scene--game {
+  display: grid;
+  place-items: center;
+}
+
+.featured-transition-copy {
+  position: absolute;
+  z-index: 5;
+  width: max-content;
+  max-width: calc(100vw - 2rem);
+  margin: 0;
+  text-align: center;
+}
+
+.film-countdown {
+  position: absolute;
+  z-index: 4;
+  width: min(54vmin, 32rem);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+
+.film-countdown__ring,
+.film-countdown__ring::after {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(245, 244, 239, 0.62);
+  border-radius: 50%;
+  content: "";
+}
+
+.film-countdown__ring::after {
+  inset: 12%;
+  border-color: rgba(245, 244, 239, 0.28);
+}
+
+.film-countdown__sweep {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 46%;
+  height: 1px;
+  background: rgba(191, 255, 0, 0.72);
+  transform-origin: left center;
+}
+
+.film-countdown strong {
+  position: absolute;
+  font-size: min(24vmin, 13rem);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.film-screen {
+  width: min(92vw, 1500px);
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #000;
+}
+
+.film-screen video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.game-camera {
+  --flashlight-x: 50%;
+  --flashlight-y: 50%;
+  --flashlight-radius: 18vmin;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #070707;
+  transform: scale(1.06);
+  transform-style: preserve-3d;
+  touch-action: pan-y;
+  pointer-events: none;
+  will-change: transform, filter, opacity;
+}
+
+.game-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.game-image--dark {
+  filter: brightness(0.2) saturate(0.72);
+}
+
+.game-image--lit {
+  mask-image: radial-gradient(
+    circle var(--flashlight-radius) at var(--flashlight-x) var(--flashlight-y),
+    #000 0%,
+    rgba(0, 0, 0, 0.96) 45%,
+    rgba(0, 0, 0, 0.56) 72%,
+    transparent 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    circle var(--flashlight-radius) at var(--flashlight-x) var(--flashlight-y),
+    #000 0%,
+    rgba(0, 0, 0, 0.96) 45%,
+    rgba(0, 0, 0, 0.56) 72%,
+    transparent 100%
+  );
+}
+
+.flashlight-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle calc(var(--flashlight-radius) * 0.7) at var(--flashlight-x) var(--flashlight-y),
+    rgba(255, 228, 115, 0.12),
+    transparent 72%
+  );
+}
+
+.flashlight-cursor {
+  position: absolute;
+  z-index: 4;
+  top: var(--flashlight-y);
+  left: var(--flashlight-x);
+  width: 2rem;
+  aspect-ratio: 1;
+  border: 1px solid rgba(255, 237, 156, 0.8);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.featured-experience.is-game-active .game-camera {
+  pointer-events: auto;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .featured-experience.is-game-active .game-camera {
+    cursor: none;
+  }
+}
+
+.featured-index {
+  position: absolute;
+  z-index: 8;
+  top: 50%;
+  left: clamp(1rem, 3vw, 3.5rem);
+  width: clamp(10.75rem, 15vw, 14.5rem);
+  transform: translateY(-50%);
+}
+
+.featured-index ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.featured-index li + li {
+  border-top: 1px solid rgba(245, 244, 239, 0.18);
+}
+
+.featured-index__link {
+  display: grid;
+  grid-template-columns: 2rem 1fr auto;
+  gap: 0.8rem;
+  min-height: 3.2rem;
+  padding: 0.82rem 0;
+  align-items: baseline;
+  color: rgba(245, 244, 239, 0.42);
+  transition:
+    color var(--motion-fast) var(--ease-emphasis),
+    padding-left var(--motion-fast) var(--ease-emphasis);
+}
+
+.featured-index__link span,
+.featured-index__link em {
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+}
+
+.featured-index__link strong {
+  font-size: clamp(0.82rem, 1vw, 1rem);
+  font-weight: 500;
+}
+
+.featured-index__link em {
+  font-style: normal;
+  opacity: 0.72;
+}
+
+.featured-index__link:is(:hover, :focus-visible, .is-active) {
+  color: var(--lime);
+  padding-left: 0.35rem;
+}
+
+.featured-experience[data-active-feature="1"] .featured-index li + li {
+  border-color: rgba(23, 23, 23, 0.16);
+}
+
+.featured-experience[data-active-feature="1"] .featured-index__link {
+  color: rgba(23, 23, 23, 0.46);
+}
+
+.featured-experience[data-active-feature="1"]
+  .featured-index__link:is(:hover, :focus-visible, .is-active) {
+  color: var(--ink, #171717);
+}
+
+.featured-mobile-index {
+  display: none;
+}
+
+.featured-stage__progress {
+  position: absolute;
+  z-index: 8;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: rgba(245, 244, 239, 0.16);
+}
+
+.featured-stage__progress span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--lime);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+@media (max-width: 720px) {
+  .featured-stage__heading {
+    top: 1rem;
+    left: 1rem;
+  }
+
+  .featured-novel__meta {
+    top: 1rem;
+    right: 1rem;
+  }
+
+  .featured-novel__world {
+    padding: 5rem 1rem 4rem;
+  }
+
+  .featured-novel__scene,
+  .portal-sentence {
+    width: min(100%, 30rem);
+  }
+
+  .featured-novel__scene p {
+    font-size: clamp(1.3rem, 6.2vw, 2.35rem);
+  }
+
+  .portal-sentence,
+  .featured-transition-copy {
+    font-size: clamp(2rem, 10vw, 4.2rem);
+  }
+
+  .portal-sentence {
+    font-size: clamp(1.5rem, 8.6vw, 3.2rem);
+  }
+
+  .drawing-camera,
+  .film-screen {
+    width: 100vw;
+  }
+
+  .featured-index {
+    display: none;
+  }
+
+  .featured-mobile-index {
+    position: absolute;
+    z-index: 8;
+    top: max(4.7rem, calc(env(safe-area-inset-top) + 4rem));
+    left: 1rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.6rem;
+    width: min(10.5rem, calc(100vw - 2rem));
+    padding: 0.65rem 0.75rem;
+    align-items: center;
+    color: var(--white);
+    background: rgba(17, 17, 17, 0.72);
+    border: 1px solid rgba(245, 244, 239, 0.18);
+    backdrop-filter: blur(12px);
+  }
+
+  .featured-mobile-index span {
+    color: var(--lime);
+    font-size: 0.62rem;
+  }
+
+  .featured-mobile-index strong {
+    font-size: 0.82rem;
+    font-weight: 500;
+  }
+
+  .game-camera {
+    --flashlight-radius: 24vmin;
+  }
+
+  .game-image {
+    object-fit: contain;
+  }
+}
+
+@media (max-width: 360px) {
+  .featured-novel__meta {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .featured-experience {
+    overflow: visible;
+  }
+
+  .featured-stage {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .featured-stage__heading {
+    position: relative;
+    top: auto;
+    left: auto;
+    padding: 4rem 1rem 2rem;
+  }
+
+  .featured-world {
+    position: relative;
+    display: grid;
+    gap: 2rem;
+    padding: 0 1rem 5rem;
+  }
+
+  .featured-scene {
+    position: relative;
+    min-height: 70svh;
+    opacity: 1 !important;
+    visibility: visible !important;
+    clip-path: none !important;
+    transform: none !important;
+  }
+
+  .featured-novel__world {
+    position: relative;
+    display: grid;
+    gap: 1rem;
+    padding: 4rem 0;
+  }
+
+  .featured-novel__scene,
+  .portal-sentence {
+    grid-area: auto;
+    width: 100%;
+    opacity: 1 !important;
+    visibility: visible !important;
+    filter: none !important;
+    transform: none !important;
+  }
+
+  .drawing-layer--sketch,
+  .drawing-layer--draft {
+    display: none;
+  }
+
+  .drawing-layer--final {
+    clip-path: none;
+  }
+
+  .featured-transition-copy,
+  .film-countdown {
+    display: none;
+  }
+
+  .film-screen,
+  .featured-scene--game .game-camera {
+    opacity: 1 !important;
+    visibility: visible !important;
+    filter: none !important;
+    transform: none !important;
+  }
+
+  .game-image--dark,
+  .game-image--lit {
+    filter: none;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+
+  .flashlight-glow,
+  .flashlight-cursor {
+    display: none;
+  }
+
+  .featured-index {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: auto;
+    padding: 0 1rem 4rem;
+    transform: none;
+  }
+
+  .featured-stage__progress {
+    display: none;
+  }
+}

@@ -1,0 +1,28 @@
+<article
+  class="featured-scene featured-scene--film"
+  data-featured-scene="film"
+  aria-label="影像《我和我的空壳》预览"
+>
+  <p class="featured-transition-copy" data-film-copy>让画面动起来。</p>
+
+  <div class="film-countdown" data-film-countdown aria-hidden="true">
+    <span class="film-countdown__ring"></span>
+    <span class="film-countdown__sweep"></span>
+    <strong data-countdown-number="3">3</strong>
+    <strong data-countdown-number="2">2</strong>
+    <strong data-countdown-number="1">1</strong>
+  </div>
+
+  <div class="film-screen" data-film-screen>
+    <video
+      muted
+      playsinline
+      preload="metadata"
+      poster="/media/videos/my-empty-shell/poster.webp"
+      data-feature-film
+      aria-label="《我和我的空壳》影像片段"
+    >
+      <source src="/media/videos/my-empty-shell/video.mp4" type="video/mp4" />
+    </video>
+  </div>
+</article>

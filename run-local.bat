@@ -1,16 +1,17 @@
 @echo off
-setlocal EnableExtensions
+setlocal EnableExtensions EnableDelayedExpansion
 chcp 65001 >nul
 
-rem Always run from the folder that contains this file.
 cd /d "%~dp0"
 
 set "DENPA_PORT=4321"
 set "DENPA_URL=http://127.0.0.1:%DENPA_PORT%/"
+set "DENPA_PROJECT_ROOT=%CD%"
 set "BUNDLED_NODE=%USERPROFILE%\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe"
 set "BUNDLED_NODE_DIR=%USERPROFILE%\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin"
 set "BUNDLED_PNPM=%USERPROFILE%\.cache\codex-runtimes\codex-primary-runtime\dependencies\bin\fallback\pnpm.cmd"
 set "BUNDLED_PNPM_DIR=%USERPROFILE%\.cache\codex-runtimes\codex-primary-runtime\dependencies\bin\fallback"
+set "ASTRO_ENTRY=%CD%\node_modules\astro\astro.js"
 
 if exist "%BUNDLED_NODE%" (
   set "NODE_EXE=%BUNDLED_NODE%"
@@ -26,26 +27,47 @@ echo ============================================================
 echo   DENPA Portfolio - Local Preview
 echo ============================================================
 echo.
-echo [1/3] Closing old Astro servers on port %DENPA_PORT%...
+echo Project: %DENPA_PROJECT_ROOT%
+echo.
+echo [1/4] Closing the previous local preview...
 
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+  "$project = [IO.Path]::GetFullPath($env:DENPA_PROJECT_ROOT);" ^
   "$connections = Get-NetTCPConnection -LocalPort %DENPA_PORT% -State Listen -ErrorAction SilentlyContinue;" ^
   "foreach ($connection in $connections) {" ^
   "  $process = Get-CimInstance Win32_Process -Filter ('ProcessId=' + $connection.OwningProcess) -ErrorAction SilentlyContinue;" ^
-  "  if ($process -and $process.Name -eq 'node.exe' -and $process.CommandLine -match 'astro') {" ^
+  "  $command = [string]$process.CommandLine;" ^
+  "  if ($process -and $process.Name -eq 'node.exe' -and ($command -match 'astro' -or $command.Contains($project))) {" ^
   "    Stop-Process -Id $process.ProcessId -Force -ErrorAction SilentlyContinue;" ^
   "  }" ^
   "}"
 
-timeout /t 1 /nobreak >nul
+for /l %%I in (1,1,15) do (
+  for /f %%P in ('powershell -NoProfile -Command "$c = Get-NetTCPConnection -LocalPort %DENPA_PORT% -State Listen -ErrorAction SilentlyContinue; if ($c) { 1 } else { 0 }"') do set "DENPA_PORT_BUSY=%%P"
+  if not "!DENPA_PORT_BUSY!"=="1" goto port_ready
+  >nul ping 127.0.0.1 -n 2
+)
 
-for /f %%P in ('powershell -NoProfile -Command "$c = Get-NetTCPConnection -LocalPort %DENPA_PORT% -State Listen -ErrorAction SilentlyContinue; if ($c) { 1 } else { 0 }"') do set "DENPA_PORT_BUSY=%%P"
+goto port_busy
 
-if "%DENPA_PORT_BUSY%"=="1" goto port_busy
+:port_ready
+echo [2/4] Clearing Astro and Vite development caches...
 
-echo [2/3] Checking project dependencies...
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+  "$project = [IO.Path]::GetFullPath($env:DENPA_PROJECT_ROOT);" ^
+  "$targets = @((Join-Path $project '.astro'), (Join-Path $project 'node_modules\.vite'));" ^
+  "foreach ($target in $targets) {" ^
+  "  $full = [IO.Path]::GetFullPath($target);" ^
+  "  if ($full.StartsWith($project, [StringComparison]::OrdinalIgnoreCase) -and (Test-Path -LiteralPath $full)) {" ^
+  "    Remove-Item -LiteralPath $full -Recurse -Force -ErrorAction Stop;" ^
+  "  }" ^
+  "}"
 
-if not exist "node_modules\astro\astro.js" (
+if errorlevel 1 goto cache_failed
+
+echo [3/4] Checking project dependencies...
+
+if not exist "%ASTRO_ENTRY%" (
   if exist "%BUNDLED_PNPM%" (
     call "%BUNDLED_PNPM%" install
   ) else (
@@ -57,7 +79,9 @@ if not exist "node_modules\astro\astro.js" (
   if errorlevel 1 goto install_failed
 )
 
-echo [3/3] Starting the latest local version...
+if not exist "%ASTRO_ENTRY%" goto dependencies_missing
+
+echo [4/4] Starting a clean copy of the latest website...
 echo.
 echo Website: %DENPA_URL%
 echo Keep this window open while viewing the website.
@@ -65,11 +89,19 @@ echo Press Ctrl+C in this window to stop it.
 echo.
 
 if /i not "%DENPA_NO_BROWSER%"=="1" (
-  start "" /b powershell -NoProfile -WindowStyle Hidden -Command ^
-    "Start-Sleep -Seconds 2; Start-Process '%DENPA_URL%?refresh=%RANDOM%'"
+  set "DENPA_BROWSER_URL=%DENPA_URL%?v=%RANDOM%%RANDOM%"
+  start "" powershell -NoProfile -WindowStyle Hidden -Command ^
+    "$url = $env:DENPA_BROWSER_URL;" ^
+    "for ($attempt = 0; $attempt -lt 40; $attempt++) {" ^
+    "  try {" ^
+    "    $response = Invoke-WebRequest -UseBasicParsing -Uri $url -TimeoutSec 1;" ^
+    "    if ($response.StatusCode -ge 200 -and $response.StatusCode -lt 500) { Start-Process $url; exit }" ^
+    "  } catch {}" ^
+    "  Start-Sleep -Milliseconds 250;" ^
+    "}"
 )
 
-"%NODE_EXE%" "node_modules\astro\astro.js" dev --host 127.0.0.1 --port %DENPA_PORT% --force
+"%NODE_EXE%" "%ASTRO_ENTRY%" dev --host 127.0.0.1 --port %DENPA_PORT% --force
 
 echo.
 echo The local website has stopped.
@@ -88,7 +120,7 @@ exit /b 1
 :port_busy
 echo.
 echo [ERROR] Port %DENPA_PORT% is occupied by another program.
-echo Close that program, then run this file again.
+echo Close the program using that port, then double-click run-local.bat again.
 echo.
 pause
 exit /b 1
@@ -97,6 +129,14 @@ exit /b 1
 echo.
 echo [ERROR] Project dependencies are missing and pnpm was not found.
 echo Open this project in Codex and ask it to install dependencies.
+echo.
+pause
+exit /b 1
+
+:cache_failed
+echo.
+echo [ERROR] The old Astro cache could not be cleared.
+echo Close editors or terminals that may be locking the project, then try again.
 echo.
 pause
 exit /b 1
