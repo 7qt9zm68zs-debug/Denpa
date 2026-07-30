@@ -20,7 +20,7 @@ DENPA 是一个原创数字艺术档案站，收录了创作者在小说、绘�
 
 ## 截图预览
 
-| 小说列表 | 小说阅读 |
+| 动画转场 | 小说阅读 |
 |----------|----------|
 | ![Fiction List](docs/screenshots/02-fiction-list.png) | ![Fiction Reading](docs/screenshots/03-fiction-reading.png) |
 ## 技术栈
