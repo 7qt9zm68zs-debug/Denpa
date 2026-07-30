@@ -1,4 +1,4 @@
-﻿# DENPA — Digital Art Archive
+# DENPA — Digital Art Archive
 
 融合小说、绘画、实验影像与独立游戏的互动数字艺术作品集。
 
@@ -20,14 +20,9 @@ DENPA 是一个原创数字艺术档案站，收录了创作者在小说、绘�
 
 ## 截图预览
 
-| 画作 | 游戏 |
-|------|------|
-| ![Artworks](docs/screenshots/05-artworks-gallery.png) | ![Games](docs/screenshots/03-games.png) |
-
-| 小说 | 首页内容 |
-|------|----------|
-| ![Fiction](docs/screenshots/04-fiction.png) | ![Content](docs/screenshots/02-artworks.png) |
-
+| 小说列表 | 小说阅读 |
+|----------|----------|
+| ![Fiction List](docs/screenshots/02-fiction-list.png) | ![Fiction Reading](docs/screenshots/03-fiction-reading.png) |
 ## 技术栈
 
 - **[Astro 5](https://astro.build/)** — 静态站点生成框架
