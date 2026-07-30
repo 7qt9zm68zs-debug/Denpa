@@ -1,0 +1,106 @@
+---
+import "@/styles/archive-portal.scss";
+
+const portalItems = [
+  {
+    key: "novel",
+    label: "小说",
+    href: "/fiction/",
+    ariaLabel: "进入完整小说作品"
+  },
+  {
+    key: "gallery",
+    label: "画廊",
+    href: "/artworks/",
+    ariaLabel: "进入完整绘画画廊"
+  },
+  {
+    key: "film",
+    label: "影视",
+    href: "/videos/",
+    ariaLabel: "进入完整影视作品"
+  },
+  {
+    key: "game",
+    label: "游戏",
+    href: "/games/",
+    ariaLabel: "进入完整游戏作品"
+  }
+] as const;
+---
+
+<section
+  class="archive-portal"
+  data-archive-portal
+  data-grid-mode="dark"
+  data-grid-strength="quiet"
+  aria-label="浏览完整作品分类"
+>
+  <div class="archive-portal__previews" aria-hidden="true">
+    <div class="archive-preview archive-preview--novel" data-archive-preview="novel">
+      <p>雨水冲刷着我的头发，露出原本的乏味的黑色。</p>
+      <p>我不得不面对那个我一味逃避的事实——</p>
+      <p>我不停追随着那些幻影，却离他们越来越远。</p>
+    </div>
+
+    <div class="archive-preview archive-preview--gallery" data-archive-preview="gallery">
+      <img
+        src="/media/artworks/art-02.webp"
+        width="1884"
+        height="1079"
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+
+    <div class="archive-preview archive-preview--film" data-archive-preview="film">
+      <img
+        src="/media/videos/my-empty-shell/poster.webp"
+        width="1023"
+        height="579"
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+
+    <div class="archive-preview archive-preview--game" data-archive-preview="game">
+      <img
+        src="/media/games/endless/featured.webp"
+        width="2493"
+        height="1392"
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+  </div>
+
+  <div class="archive-portal__grid" aria-hidden="true"></div>
+  <div class="archive-portal__glass" aria-hidden="true"></div>
+
+  <nav class="archive-portal__nav" aria-label="作品分类入口">
+    {
+      portalItems.map((item) => (
+        <a
+          href={item.href}
+          aria-label={item.ariaLabel}
+          data-archive-link={item.key}
+        >
+          {item.label}
+        </a>
+      ))
+    }
+  </nav>
+</section>
+
+<script>
+  import { initArchivePortal } from "@/utils/archive-portal";
+
+  const root = document.querySelector<HTMLElement>("[data-archive-portal]");
+  const cleanup = root ? initArchivePortal(root) : undefined;
+
+  window.addEventListener("pagehide", () => cleanup?.(), { once: true });
+  document.addEventListener("astro:before-swap", () => cleanup?.(), { once: true });
+</script>
